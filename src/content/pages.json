@@ -1,0 +1,46 @@
+{
+  "home": {
+    "hero": {
+      "headline": "Sua <strong>identidade</strong><br>começa aqui.",
+      "subheadline": "Crachás, cordões, pulseiras e sistemas de controle de acesso. <strong>Mais de 25 anos</strong> identificando empresas, eventos e pessoas em Londrina/PR.",
+      "cta_primary_text": "Solicitar orçamento",
+      "cta_primary_url": "https://api.whatsapp.com/send?phone=5543988179234",
+      "cta_secondary_text": "Ver produtos",
+      "cta_secondary_url": "#produtos",
+      "hero_image": "https://nonaca.com.br/wp-content/uploads/2023/12/cracha-mini.jpg"
+    },
+    "products_title": "Nossos <span class='text-nonaca-gold'>produtos</span>",
+    "products_subtitle": "Linha completa para sistemas de identificação — da produção à tecnologia.",
+    "diferenciais_title": "Por que a <span class='text-nonaca-gold'>Nonaca</span>?",
+    "diferenciais": [
+      { "icon": "ShieldCheck", "title": "Matéria prima premium", "desc": "Só utilizamos insumos de primeira linha para garantir durabilidade e qualidade." },
+      { "icon": "Printer", "title": "Impressão e acabamento", "desc": "Excelência técnica com equipamentos de ponta e profissionais especializados." },
+      { "icon": "Zap", "title": "Agilidade na entrega", "desc": "Produção rápida sem abrir mão da qualidade. Prazos que se encaixam na sua agenda." },
+      { "icon": "Infinity", "title": "Sem quantidade mínima", "desc": "Atendemos de 1 a 10.000 unidades com o mesmo cuidado e dedicação." },
+      { "icon": "Cpu", "title": "Tecnologia integrada", "desc": "RFID, QR Code, código de barras e Bluetooth para modernizar seu controle." }
+    ],
+    "cta_final": {
+      "headline": "Pronto para identificar <span class='text-nonaca-gold'>sua equipe</span>?",
+      "subheadline": "Fale com nossa equipe agora pelo WhatsApp e receba seu orçamento em minutos."
+    }
+  },
+  "quemsomos": {
+    "hero_headline": "25 anos identificando <strong>pessoas e marcas</strong>.",
+    "hero_sub": "Desde 1999, a Nonaca é referência em sistemas de identificação em Londrina/PR.",
+    "about_text": "<p>A <strong>Nonaca</strong> nasceu em 1999 com uma missão clara: entregar qualidade, organização e cuidado em cada produto que fabricamos.</p><p>Somos especializados na confecção de crachás em PVC, cordões personalizados, pulseiras invioláveis, carteirinhas de estudante, comandas, catracas e relógios de ponto.</p><p>Ao longo de mais de <strong>duas décadas</strong>, atendemos empresas de todos os tamanhos — de pequenos negócios a grandes corporações — sempre com o mesmo nível de exigência e dedicação.</p>",
+    "metrics": [
+      { "value": "25+", "label": "Anos de experiência" },
+      { "value": "183", "label": "Avaliações Google" },
+      { "value": "10k+", "label": "Clientes atendidos" },
+      { "value": "100%", "label": "Comprometimento" }
+    ]
+  },
+  "contato": {
+    "email": "contato@nonaca.com.br",
+    "whatsapp": "5543988179234",
+    "telefone1": "(43) 3026-1326",
+    "telefone2": "(43) 3323-3692",
+    "endereco": "Rua Eduardo Benjamin Hosken, 200<br>CEP: 86020-440 — Londrina/PR",
+    "maps_url": "https://www.google.com/maps/place/Nonaca+Crach%C3%A1s/@-23.3059394,-51.170804,18.75z"
+  }
+}

@@ -1,0 +1,107 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import products from '../content/products.json';
+
+export function getStaticPaths() {
+  return products.map(product => ({
+    params: { slug: product.slug },
+    props: { product },
+  }));
+}
+
+const { product } = Astro.props;
+const others = products.filter(p => p.slug !== product.slug).slice(0, 4);
+---
+
+<BaseLayout
+  title={`${product.name} — Nonaca Sistema de Identificação`}
+  description={`${product.name} personalizados pela Nonaca. Qualidade, agilidade e tecnologia em Londrina/PR.`}
+  image={product.image}
+>
+  <!-- Hero -->
+  <section class="bg-nonaca-dark pt-32 pb-16 relative overflow-hidden">
+    <div class="particles-bg">
+      {Array.from({length:10}).map((_, i) => (
+        <div class="particle-dot" style={`width:${4+(i%3)*2}px;height:${4+(i%3)*2}px;background:${i%2===0?'#f5a623':'#2d6bc4'};opacity:${0.3+(i%3)*0.15};left:${(i*19+5)%92}%;top:${(i*27+8)%80}%;--dur:${2.5+(i%4)*0.6}s;--delay:${(i*0.25)%2}s`}/>
+      ))}
+    </div>
+    <div class="max-w-7xl mx-auto px-4 relative z-10">
+      <!-- Breadcrumb -->
+      <nav class="flex items-center gap-2 text-nonaca-sky text-sm mb-8">
+        <a href="/" class="hover:text-white transition-colors">Home</a>
+        <span>→</span>
+        <span class="text-nonaca-gold">{product.name}</span>
+      </nav>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <h1 class="font-heading text-4xl sm:text-5xl text-white font-bold leading-tight mb-6 animate-slide-up"
+              set:html={product.headline} />
+          <div class="flex flex-wrap gap-3 mb-8">
+            {product.features.map(f => (
+              <span class="bg-nonaca-blue/50 border border-nonaca-light/30 text-nonaca-sky
+                           text-xs px-3 py-1.5 rounded-full">{f}</span>
+            ))}
+          </div>
+          <a href="https://api.whatsapp.com/send?phone=5543988179234" target="_blank"
+             class="btn-primary text-base px-8 py-3.5">
+            Solicitar orçamento →
+          </a>
+        </div>
+
+        <div class="flex justify-center">
+          <div class="animate-float relative">
+            <div class="absolute inset-0 bg-nonaca-blue/20 rounded-3xl blur-2xl scale-110"></div>
+            <img
+              src={product.image}
+              alt={product.name}
+              class="relative rounded-3xl shadow-2xl max-w-sm w-full border border-nonaca-light/30"
+              loading="eager"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="absolute bottom-0 left-0 right-0">
+      <svg viewBox="0 0 1440 50" fill="none"><path d="M0 50L1440 50L1440 15C1200 50 960 0 720 15C480 30 240 0 0 15L0 50Z" fill="#ffffff"/></svg>
+    </div>
+  </section>
+
+  <!-- Conteúdo -->
+  <section class="py-20 bg-white">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="rich-content text-gray-600 leading-relaxed reveal" set:html={product.description} />
+
+      <div class="mt-12 p-8 bg-nonaca-bg rounded-3xl reveal">
+        <h3 class="font-heading font-bold text-nonaca-blue text-xl mb-4">Peça agora mesmo</h3>
+        <p class="text-gray-500 mb-6">Fale com nossa equipe e receba um orçamento personalizado em minutos. Sem compromisso.</p>
+        <div class="flex flex-wrap gap-4">
+          <a href="https://api.whatsapp.com/send?phone=5543988179234" target="_blank"
+             class="btn-primary">💬 WhatsApp</a>
+          <a href="tel:4330261326" class="btn-blue">📞 Ligar agora</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Outros produtos -->
+  <section class="py-16 bg-nonaca-bg">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="section-title text-center mb-10 reveal">Outros produtos</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-5">
+        {others.map((p, i) => (
+          <a href={`/${p.slug}`} class="card-product group reveal" style={`animation-delay:${i*80}ms`}>
+            <div class="overflow-hidden aspect-video">
+              <img src={p.image} alt={p.name}
+                   class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                   loading="lazy"/>
+            </div>
+            <div class="p-4">
+              <h3 class="font-heading font-semibold text-sm text-nonaca-text">{p.name}</h3>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

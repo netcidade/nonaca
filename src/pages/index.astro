@@ -1,0 +1,279 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import products from '../content/products.json';
+import content from '../content/pages.json';
+
+const { home } = content;
+const { hero, diferenciais } = home;
+---
+
+<BaseLayout>
+  <!-- ═══════════════════════════════════
+       HERO SECTION
+  ═══════════════════════════════════ -->
+  <section class="relative bg-nonaca-dark min-h-[90vh] flex items-center overflow-hidden pt-28 pb-16">
+
+    <!-- Particles -->
+    <div class="particles-bg" id="hero-particles">
+      {Array.from({ length: 18 }).map((_, i) => (
+        <div
+          class="particle-dot"
+          style={`
+            width: ${4 + (i % 5) * 2}px;
+            height: ${4 + (i % 5) * 2}px;
+            background: ${i % 3 === 0 ? '#f5a623' : '#2d6bc4'};
+            opacity: ${0.3 + (i % 4) * 0.15};
+            left: ${(i * 17 + 5) % 95}%;
+            top: ${(i * 23 + 10) % 85}%;
+            --dur: ${2.5 + (i % 4) * 0.7}s;
+            --delay: ${(i * 0.3) % 2}s;
+          `}
+        />
+      ))}
+    </div>
+
+    <!-- Geometric shape accent -->
+    <div class="absolute right-0 top-0 w-1/2 h-full opacity-5"
+         style="background: radial-gradient(ellipse at 70% 50%, #f5a623 0%, transparent 70%)">
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 w-full relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+
+        <!-- Text -->
+        <div>
+          <div class="inline-flex items-center gap-2 bg-nonaca-blue/40 border border-nonaca-light/30
+                      text-nonaca-sky text-xs font-semibold px-4 py-1.5 rounded-full mb-6
+                      animate-fade-in">
+            <span class="w-1.5 h-1.5 bg-nonaca-gold rounded-full"></span>
+            Desde 1999 — Londrina/PR
+          </div>
+
+          <h1
+            class="font-heading text-4xl sm:text-5xl lg:text-6xl xl:text-7xl text-white leading-tight mb-6 animate-slide-up"
+            style="animation-delay: 0.1s"
+            set:html={hero.headline}
+          />
+
+          <p
+            class="text-nonaca-sky text-lg leading-relaxed mb-8 max-w-xl animate-slide-up"
+            style="animation-delay: 0.2s"
+            set:html={hero.subheadline}
+          />
+
+          <div class="flex flex-wrap gap-4 animate-slide-up" style="animation-delay: 0.3s">
+            <a href={hero.cta_primary_url} target="_blank" class="btn-primary text-base px-8 py-3.5">
+              {hero.cta_primary_text}
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+              </svg>
+            </a>
+            <a href={hero.cta_secondary_url} class="btn-secondary text-base px-8 py-3.5">
+              {hero.cta_secondary_text}
+            </a>
+          </div>
+
+          <!-- Stats -->
+          <div class="flex gap-8 mt-10 animate-fade-in" style="animation-delay: 0.5s">
+            <div>
+              <div class="text-2xl font-heading font-bold text-white">25+</div>
+              <div class="text-xs text-nonaca-sky">Anos de experiência</div>
+            </div>
+            <div>
+              <div class="text-2xl font-heading font-bold text-white">183</div>
+              <div class="text-xs text-nonaca-sky">Avaliações Google</div>
+            </div>
+            <div>
+              <div class="text-2xl font-heading font-bold text-white">10k+</div>
+              <div class="text-xs text-nonaca-sky">Clientes atendidos</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Floating badge / Card visual -->
+        <div class="flex items-center justify-center animate-fade-in" style="animation-delay: 0.3s">
+          <div class="relative">
+            <!-- Glow effect -->
+            <div class="absolute inset-0 bg-nonaca-blue/30 rounded-3xl blur-3xl scale-110"></div>
+
+            <!-- Floating card container -->
+            <div class="relative animate-float">
+              <div class="bg-nonaca-blue border border-nonaca-light/40 rounded-3xl p-3 shadow-2xl
+                          w-64 sm:w-80">
+                <img
+                  src={hero.hero_image}
+                  alt="Crachá Nonaca — Sistema de Identificação"
+                  class="w-full rounded-2xl"
+                  loading="eager"
+                />
+                <div class="p-3 pt-2">
+                  <div class="text-white font-heading font-semibold text-sm mb-0.5">Nonaca Identificação</div>
+                  <div class="text-nonaca-sky text-xs">Crachá PVC premium · Londrina/PR</div>
+                  <div class="mt-2 flex items-center gap-1">
+                    {Array.from({length:5}).map(() => (
+                      <svg class="w-3 h-3 fill-nonaca-gold" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                    ))}
+                    <span class="text-nonaca-sky text-xs ml-1">5.0</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Second floating card (offset) -->
+            <div class="absolute -bottom-6 -right-10 animate-float-med opacity-80">
+              <div class="bg-nonaca-dark border border-nonaca-light/30 rounded-2xl px-4 py-3 shadow-xl">
+                <div class="text-nonaca-gold text-xs font-semibold mb-0.5">✓ Pedido confirmado</div>
+                <div class="text-nonaca-sky text-xs">Entrega em 3 dias úteis</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wave bottom -->
+    <div class="absolute bottom-0 left-0 right-0">
+      <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 60L1440 60L1440 20C1200 60 960 0 720 20C480 40 240 0 0 20L0 60Z" fill="#ffffff"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════
+       PRODUCTS GRID
+  ═══════════════════════════════════ -->
+  <section id="produtos" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center mb-14 reveal">
+        <h2 class="section-title mb-3" set:html={home.products_title} />
+        <p class="text-gray-500 max-w-xl mx-auto">{home.products_subtitle}</p>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-5">
+        {products.map((product, i) => (
+          <a
+            href={`/${product.slug}`}
+            class="card-product group reveal"
+            style={`animation-delay: ${i * 60}ms; transition-delay: ${i * 60}ms`}
+          >
+            <div class="overflow-hidden aspect-video">
+              <img
+                src={product.image}
+                alt={product.name}
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                loading="lazy"
+              />
+            </div>
+            <div class="p-4">
+              <h3 class="font-heading font-semibold text-nonaca-text text-sm sm:text-base">{product.name}</h3>
+              <div class="flex items-center gap-1 mt-1">
+                <span class="text-nonaca-blue text-xs font-medium">Ver detalhes</span>
+                <span class="text-nonaca-blue text-xs group-hover:translate-x-1 transition-transform">→</span>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════
+       DIFERENCIAIS
+  ═══════════════════════════════════ -->
+  <section class="py-20 bg-nonaca-bg">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center mb-14 reveal">
+        <h2 class="section-title mb-3" set:html={home.diferenciais_title} />
+        <p class="text-gray-500 max-w-xl mx-auto">Excelência do começo ao fim — do pedido à entrega.</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+        {diferenciais.map((d, i) => (
+          <div class="bg-white rounded-2xl p-6 text-center hover:-translate-y-1 hover:shadow-lg
+                      transition-all duration-300 reveal group"
+               style={`animation-delay: ${i * 80}ms`}>
+            <div class="w-12 h-12 bg-nonaca-blue/10 rounded-2xl flex items-center justify-center
+                        mx-auto mb-4 group-hover:bg-nonaca-blue/20 transition-colors">
+              <svg class="w-6 h-6 text-nonaca-blue" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                {d.icon === 'ShieldCheck' && <><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></>}
+                {d.icon === 'Printer' && <><polyline stroke-linecap="round" stroke-linejoin="round" points="6 9 6 2 18 2 18 9"/><path stroke-linecap="round" stroke-linejoin="round" d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" stroke-linecap="round" stroke-linejoin="round"/></>}
+                {d.icon === 'Zap' && <><polygon stroke-linecap="round" stroke-linejoin="round" points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></>}
+                {d.icon === 'Infinity' && <path stroke-linecap="round" stroke-linejoin="round" d="M12 12c-2-2.5-4-4-6-4a4 4 0 000 8c2 0 4-1.5 6-4zm0 0c2 2.5 4 4 6 4a4 4 0 000-8c-2 0-4 1.5-6 4z"/>}
+                {d.icon === 'Cpu' && <><rect x="9" y="9" width="6" height="6" stroke-linecap="round" stroke-linejoin="round"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 9V4.5M15 19.5V15M9 9V4.5M9 19.5V15M19.5 15H15M4.5 15H9M19.5 9H15M4.5 9H9"/><rect x="2" y="2" width="20" height="20" rx="2" stroke-linecap="round" stroke-linejoin="round"/></>}
+              </svg>
+            </div>
+            <h3 class="font-heading font-semibold text-nonaca-text text-sm mb-2">{d.title}</h3>
+            <p class="text-gray-500 text-xs leading-relaxed">{d.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════
+       AVALIAÇÕES
+  ═══════════════════════════════════ -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center mb-12 reveal">
+        <div class="flex items-center justify-center gap-2 mb-3">
+          {Array.from({length:5}).map(() => (
+            <svg class="w-6 h-6 fill-nonaca-gold" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          ))}
+        </div>
+        <h2 class="section-title mb-2">Excelente</h2>
+        <p class="text-gray-400 text-sm">Com base em 183 avaliações Google</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {[
+          { name: 'Mauricio Chiesa Carvalho', text: 'Qualidade de equipe, valores adequados, produtos de alta qualidade. Sempre prestativos e atenciosos!', date: 'Ago 2025' },
+          { name: 'Desenvolve Tamarana', text: 'Atenção ao cliente. Produtos de excelente qualidade. Muito satisfeitos com o resultado final dos crachás.', date: 'Ago 2025' },
+          { name: 'Ataliba Lessa', text: 'Ótimo atendimento. Produto entregue no prazo e com qualidade excelente. Recomendo muito a Nonaca!', date: 'Jul 2025' },
+        ].map((r, i) => (
+          <div class="bg-nonaca-bg rounded-2xl p-6 reveal" style={`animation-delay: ${i * 100}ms`}>
+            <div class="flex gap-1 mb-3">
+              {Array.from({length:5}).map(() => (
+                <svg class="w-4 h-4 fill-nonaca-gold" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              ))}
+            </div>
+            <p class="text-gray-600 text-sm leading-relaxed mb-4">"{r.text}"</p>
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="font-semibold text-nonaca-text text-sm">{r.name}</div>
+                <div class="text-gray-400 text-xs">{r.date}</div>
+              </div>
+              <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"
+                   alt="Google" class="h-4 opacity-50" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════
+       CTA FINAL
+  ═══════════════════════════════════ -->
+  <section class="bg-nonaca-blue py-20">
+    <div class="max-w-3xl mx-auto px-4 text-center reveal">
+      <h2 class="font-heading text-3xl sm:text-4xl text-white font-bold mb-4"
+          set:html={home.cta_final.headline} />
+      <p class="text-nonaca-sky text-lg mb-10">{home.cta_final.subheadline}</p>
+      <a
+        href="https://api.whatsapp.com/send?phone=5543988179234"
+        target="_blank"
+        class="inline-flex items-center gap-3 bg-[#25D366] hover:bg-[#20b858]
+               text-white font-heading font-bold text-xl px-10 py-5 rounded-2xl
+               hover:scale-105 hover:-translate-y-1 transition-all duration-200
+               shadow-lg animate-pulse-ring"
+      >
+        <svg class="w-7 h-7 fill-white" viewBox="0 0 24 24">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+        Falar no WhatsApp
+      </a>
+      <p class="text-nonaca-sky/60 text-sm mt-5">Respondemos em poucos minutos</p>
+    </div>
+  </section>
+</BaseLayout>

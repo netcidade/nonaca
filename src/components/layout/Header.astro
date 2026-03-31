@@ -1,0 +1,94 @@
+---
+import products from '../../content/products.json';
+const navItems = products.map(p => ({ label: p.navLabel, href: `/${p.slug}` }));
+---
+
+<header id="site-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white/95 backdrop-blur-sm">
+  <!-- WhatsApp top bar -->
+  <div class="bg-nonaca-dark text-nonaca-sky text-xs py-1.5 px-4 flex items-center justify-center gap-4">
+    <span>📞 (43) 3026-1326 / (43) 3323-3692</span>
+    <span class="hidden sm:inline">|</span>
+    <a href="https://api.whatsapp.com/send?phone=5543988179234" target="_blank"
+       class="text-nonaca-gold hover:text-nonaca-gold-l font-semibold transition-colors">
+      WhatsApp: (43) 98817-9234
+    </a>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
+    <!-- Logo -->
+    <a href="/" class="flex-shrink-0 group" id="logo-link">
+      <img
+        src="https://nonaca.com.br/wp-content/uploads/2021/11/logo2-forte.png"
+        alt="Nonaca Sistema de Identificação"
+        class="h-10 w-auto group-hover:scale-105 transition-transform duration-200"
+      />
+    </a>
+
+    <!-- Desktop nav -->
+    <nav class="hidden lg:flex items-center gap-1">
+      <a href="/quem-somos" class="nav-link">Quem Somos</a>
+      {navItems.map(item => (
+        <a href={item.href} class="nav-link">{item.label}</a>
+      ))}
+    </nav>
+
+    <!-- CTA desktop -->
+    <div class="hidden lg:flex items-center gap-3">
+      <a href="https://api.whatsapp.com/send?phone=5543988179234" target="_blank"
+         class="btn-primary text-sm py-2 px-5">
+        Orçamento →
+      </a>
+    </div>
+
+    <!-- Mobile hamburger -->
+    <button id="menu-toggle" class="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors" aria-label="Menu">
+      <div class="w-5 h-0.5 bg-nonaca-text mb-1 transition-all" id="bar1"></div>
+      <div class="w-5 h-0.5 bg-nonaca-text mb-1 transition-all" id="bar2"></div>
+      <div class="w-5 h-0.5 bg-nonaca-text transition-all" id="bar3"></div>
+    </button>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="lg:hidden hidden bg-white border-t border-gray-100 shadow-lg">
+    <nav class="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-1">
+      <a href="/quem-somos" class="mobile-nav-link">Quem Somos</a>
+      {navItems.map(item => (
+        <a href={item.href} class="mobile-nav-link">{item.label}</a>
+      ))}
+      <a href="https://api.whatsapp.com/send?phone=5543988179234" target="_blank"
+         class="btn-primary mt-3 justify-center">
+        Solicitar Orçamento →
+      </a>
+    </nav>
+  </div>
+</header>
+
+<style>
+.nav-link {
+  @apply text-sm font-body text-nonaca-text hover:text-nonaca-blue px-2.5 py-1.5 rounded-lg
+         hover:bg-nonaca-bg transition-all duration-150;
+}
+.mobile-nav-link {
+  @apply text-base font-body text-nonaca-text hover:text-nonaca-blue hover:bg-nonaca-bg
+         px-3 py-2.5 rounded-lg transition-all duration-150 border-b border-gray-50;
+}
+</style>
+
+<script>
+const toggle = document.getElementById('menu-toggle');
+const menu = document.getElementById('mobile-menu');
+const header = document.getElementById('site-header');
+
+toggle?.addEventListener('click', () => {
+  menu?.classList.toggle('hidden');
+});
+
+// Shadow on scroll
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 10) {
+    header?.classList.add('shadow-md');
+  } else {
+    header?.classList.remove('shadow-md');
+  }
+});
+</script>
