@@ -13,7 +13,7 @@ export const POST: APIRoute = async ({ request, cookies, locals }) => {
   try {
     // ✅ Lê do ambiente do Cloudflare Worker
     const runtime = (locals as any).runtime;
-    const ADMIN_TOKEN = runtime?.env?.ADMIN_TOKEN ?? 'Nonaca@2025';
+    const ADMIN_TOKEN = runtime?.env?.ADMIN_TOKEN ?? 'nonaca2025';
 
     const body = await request.json();
     const { password } = body;
