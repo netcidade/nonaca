@@ -1,7 +1,18 @@
 ---
 export const prerender = false;
-import products from '../../content/products.json';
-import content from '../../content/pages.json';
+import { getDatabases, DB_ID, COL_CONTENT, COL_PRODUCTS } from '../../lib/appwrite';
+import { Query } from 'node-appwrite';
+
+const db = getDatabases();
+
+// Carrega páginas do Appwrite
+const pagesRes = await db.listDocuments(DB_ID, COL_CONTENT, [Query.equal('key', 'pages')]);
+const pagesDoc = pagesRes.documents[0];
+const content = pagesDoc ? JSON.parse(pagesDoc.data) : {};
+
+// Carrega produtos do Appwrite
+const productsRes = await db.listDocuments(DB_ID, COL_PRODUCTS, [Query.limit(100)]);
+const products = productsRes.documents.map((d: any) => JSON.parse(d.data));
 ---
 
 <!DOCTYPE html>
@@ -192,19 +203,62 @@ import content from '../../content/pages.json';
     .seo-desc-prev { font-size: 12px; color: #4d5156; line-height: 1.5; }
     .seo-label { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 5px; }
 
-    /* Media grid */
-    .media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; margin-top: 12px; }
-    .media-item { position: relative; aspect-ratio: 4/3; border-radius: 8px; overflow: hidden; border: 2px solid transparent; cursor: pointer; transition: border-color 0.15s; }
-    .media-item:hover { border-color: var(--blue); }
-    .media-item.selected { border-color: var(--accent); }
-    .media-item img { width: 100%; height: 100%; object-fit: cover; }
-    .media-name { font-size: 9px; color: var(--text-muted); text-align: center; margin-top: 3px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    /* Media grid atualizado */
+    .media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-top: 16px; min-height: 200px; }
+    .media-card { background: #fff; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; transition: box-shadow .15s; }
+    .media-card:hover { box-shadow: 0 4px 12px rgba(26,75,142,.08); }
+    .media-card-img { width: 100%; height: 130px; object-fit: cover; background: #fafafa; }
+    .media-card-body { padding: 12px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .media-card-name { font-size: 11px; font-weight: 600; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .media-card-url-row { display: flex; gap: 6px; }
+    .media-card-input { flex: 1; min-width: 0; font-size: 10px; padding: 4px 6px; border: 1px solid var(--border); border-radius: 6px; background: #f8fafc; color: var(--text-muted); outline: none; }
+    .media-card-btn-copy { background: #EBF2FB; color: var(--blue); border: none; padding: 4px 8px; border-radius: 6px; font-size: 10px; cursor: pointer; font-weight: 600; white-space: nowrap; transition: all 0.15s; }
+    .media-card-btn-copy:hover { background: #d0e4f7; }
+    .media-card-btn-delete { background: #fef2f2; color: #dc2626; border: 1px solid #fca5a5; padding: 6px; border-radius: 8px; font-size: 11px; cursor: pointer; font-weight: 600; width: 100%; margin-top: auto; font-family: 'Inter', sans-serif; transition: background 0.15s; }
+    .media-card-btn-delete:hover { background: #fee2e2; }
 
     /* Responsive */
     @media (max-width: 768px) {
       .sidebar { display: none; }
       .sidebar.open { display: flex; position: fixed; z-index: 100; }
     }
+
+    /* Modais Genéricos */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px);
+      z-index: 200; align-items: center; justify-content: center; padding: 1.5rem;
+    }
+    .modal-overlay.active { display: flex; }
+    
+    .modal-content {
+      background: var(--white); border-radius: 20px; width: 100%;
+      max-width: 800px; max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+      position: relative; animation: modalIn 0.3s ease-out;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.95) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    
+    .modal-header {
+      padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; background: var(--white); z-index: 10;
+    }
+    .modal-title { font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 600; color: var(--blue); }
+    .modal-close { background: none; border: none; font-size: 24px; color: var(--text-muted); cursor: pointer; line-height: 1; }
+    .modal-body { padding: 1.5rem; }
+
+    /* Modal de Sucesso */
+    .success-card { text-align: center; padding: 1rem; }
+    .success-icon { font-size: 48px; margin-bottom: 1rem; display: block; }
+    .success-title { font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 700; color: #065f46; margin-bottom: 0.5rem; }
+    .success-text { color: var(--text-muted); margin-bottom: 1.5rem; font-size: 14px; }
+    .success-actions { display: flex; gap: 10px; justify-content: center; }
+    .btn-secondary { background: #EBF2FB; color: var(--blue); border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 13px; }
+    .btn-secondary:hover { background: #d0e4f7; }
   </style>
 </head>
 <body>
@@ -321,8 +375,8 @@ import content from '../../content/pages.json';
               </div>
             </div>
             <div class="page-actions">
-              <button class="btn-edit" onclick="showPanel('pages', null)">Editar</button>
-              <button class="btn-seo" onclick="showPanel('seo', null)">SEO</button>
+              <button class="btn-edit" onclick={`selectPage('${p.slug === '/' ? 'home' : p.slug.replace('/','')}', '${p.name}')`}>Editar</button>
+              <button class="btn-seo" onclick={`openSeo('${p.slug === '/' ? 'home' : p.slug.replace('/','')}')`}>SEO</button>
             </div>
           </div>
         ))}
@@ -333,23 +387,14 @@ import content from '../../content/pages.json';
     <div class="panel" id="panel-pages">
       <div class="section-heading">Páginas do site</div>
       <p style="font-size:13px;color:#6b7280;margin-bottom:1rem">Clique em uma página para editar o conteúdo. Selecione abaixo:</p>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.5rem" id="page-selector">
-        {[
-          {name:'Home', key:'home'},
-          {name:'Quem Somos', key:'quemsomos'},
-        ].map(p => (
-          <button class="btn-edit" style="font-size:12px;padding:6px 16px" onclick={`selectPage('${p.key}','${p.name}')`}>
-            {p.name}
-          </button>
-        ))}
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1.5rem" id="page-selector">
+        <button class="btn-edit" style="padding:10px 20px" onclick="selectPage('home','Home')">Home</button>
+        <button class="btn-edit" style="padding:10px 20px" onclick="selectPage('quemsomos','Quem Somos')">Quem Somos</button>
         {products.map(p => (
-          <button class="btn-seo" style="font-size:12px;padding:6px 16px" onclick={`selectPage('product-${p.slug}','${p.name}')`}>
+          <button class="btn-edit" style="padding:10px 20px" onclick={`selectPage('${p.slug}','${p.name}')`}>
             {p.name}
           </button>
         ))}
-      </div>
-      <div id="page-editor-area" style="font-size:13px;color:#9ca3af;text-align:center;padding:2rem">
-        ↑ Selecione uma página acima para editar
       </div>
     </div>
 
@@ -413,7 +458,6 @@ import content from '../../content/pages.json';
         <div class="save-row">
           <a href="/" target="_blank" class="btn-preview">Pré-visualizar site →</a>
           <div style="display:flex;align-items:center;gap:10px">
-            <span class="toast" id="toast-hero">✓ Hero salvo!</span>
             <button class="btn-save" onclick="saveHero()">Salvar hero</button>
           </div>
         </div>
@@ -473,7 +517,6 @@ import content from '../../content/pages.json';
             <button onclick="closeModal()" class="btn-preview">Cancelar</button>
             <button onclick="createProduct()" class="btn-save">Criar produto</button>
           </div>
-          <span class="toast" id="toast-new" style="text-align:center">✓ Produto criado!</span>
         </div>
       </div>
     </div>
@@ -504,27 +547,26 @@ import content from '../../content/pages.json';
       <div class="editor-grid">
         <div class="field-card">
           <div class="field-label">Title tag <span style="color:#9ca3af;font-weight:400;font-size:9px">(máx. 60 chars)</span></div>
-          <input class="field-input" id="seo-title" oninput="updateSeoPreview()" value="Nonaca — Crachás e Sistemas de Identificação em Londrina/PR"/>
+          <input class="field-input" id="seo-title" oninput="updateSeoVisuals()" placeholder="Título para o Google..."/>
           <div style="font-size:10px;color:#9ca3af;margin-top:4px" id="seo-title-count">0 / 60 caracteres</div>
         </div>
         <div class="field-card">
           <div class="field-label">Meta description <span style="color:#9ca3af;font-weight:400;font-size:9px">(máx. 160 chars)</span></div>
-          <textarea class="field-textarea" id="seo-desc" oninput="updateSeoPreview()" rows="3">Nonaca fabrica crachás, cordões e pulseiras com mais de 25 anos de experiência. Qualidade reconhecida em Londrina/PR. Solicite seu orçamento.</textarea>
+          <textarea class="field-textarea" id="seo-description" oninput="updateSeoVisuals()" rows="3" placeholder="Descrição para o Google..."></textarea>
           <div style="font-size:10px;color:#9ca3af;margin-top:4px" id="seo-desc-count">0 / 160 caracteres</div>
         </div>
         <div class="field-card">
           <div class="seo-label">Pré-visualização Google</div>
           <div class="seo-preview">
-            <div class="seo-url" id="seo-prev-url">nonaca.com.br › home</div>
-            <div class="seo-title-prev" id="seo-prev-title">Nonaca — Crachás e Sistemas de Identificação em Londrina/PR</div>
-            <div class="seo-desc-prev" id="seo-prev-desc">Nonaca fabrica crachás, cordões e pulseiras com mais de 25 anos de experiência.</div>
+            <div class="seo-url">nonaca.com.br › <span id="preview-slug">home</span></div>
+            <div class="seo-title-prev" id="preview-title">Título da Página</div>
+            <div class="seo-desc-prev" id="preview-desc">Descrição da página no Google...</div>
           </div>
         </div>
         <div class="save-row">
           <span></span>
           <div style="display:flex;align-items:center;gap:10px">
-            <span class="toast" id="toast-seo">✓ SEO salvo!</span>
-            <button class="btn-save" onclick="showToast('toast-seo')">Salvar SEO</button>
+            <button class="btn-save" onclick="saveSeo()">Salvar SEO</button>
           </div>
         </div>
       </div>
@@ -565,7 +607,6 @@ import content from '../../content/pages.json';
         <div class="save-row">
           <span></span>
           <div style="display:flex;align-items:center;gap:10px">
-            <span class="toast" id="toast-contato">✓ Contato salvo!</span>
             <button class="btn-save" onclick="saveContato()">Salvar contato</button>
           </div>
         </div>
@@ -599,13 +640,42 @@ import content from '../../content/pages.json';
         <div class="save-row">
           <a href="/quem-somos" target="_blank" class="btn-preview">Pré-visualizar →</a>
           <div style="display:flex;align-items:center;gap:10px">
-            <span class="toast" id="toast-qs">✓ Salvo!</span>
             <button class="btn-save" onclick="saveQuemSomos()">Salvar</button>
           </div>
         </div>
       </div>
     </div>
 
+  </div>
+</div>
+
+<!-- MODAL DE EDIÇÃO UNIVERSAL -->
+<div class="modal-overlay" id="modal-edit">
+  <div class="modal-content" style="max-width: 900px;">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-edit-title">Editar Conteúdo</div>
+      <button class="modal-close" onclick="closeEditModal()">×</button>
+    </div>
+    <div class="modal-body" id="modal-edit-body">
+      <!-- Os painéis de edição serão movidos para cá ou exibidos aqui -->
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DE SUCESSO -->
+<div class="modal-overlay" id="modal-success" style="z-index: 300;">
+  <div class="modal-content" style="max-width: 420px;">
+    <div class="modal-body">
+      <div class="success-card">
+        <span class="success-icon">✅</span>
+        <div class="success-title">Salvo com sucesso!</div>
+        <p class="success-text">As informações foram atualizadas e já estão disponíveis no site.</p>
+        <div class="success-actions">
+          <button class="btn-secondary" onclick="closeSuccessModal()">Continuar editando</button>
+          <button class="btn-save" onclick="backToDashboard()">Dashboard</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -695,73 +765,233 @@ document.addEventListener('DOMContentLoaded', () => {
   createQuill('endereco',    TOOLBAR_SIMPLE, pagesData.contato?.endereco || 'Rua Eduardo Benjamin Hosken, 200<br>CEP: 86020-440 — Londrina/PR');
   createQuill('qs-headline', TOOLBAR_SIMPLE, pagesData.quemsomos?.hero_headline || '25 anos identificando <strong>pessoas e marcas</strong>.');
   createQuill('qs-about',    TOOLBAR_FULL,   pagesData.quemsomos?.about_text || '<p>A <strong>Nonaca</strong> nasceu em 1999.</p>');
+
+  // Restaura o estado da UI após HMR
+  setTimeout(() => {
+    const act = sessionStorage.getItem('admin_active_panel');
+    if (act && document.getElementById('panel-' + act) && !['hero', 'seo', 'contato', 'quemsomos'].includes(act)) {
+      window.showPanel(act);
+    }
+    const modalType = sessionStorage.getItem('admin_modal_type');
+    const modalId = sessionStorage.getItem('admin_modal_id');
+    
+    if (modalType === 'edit_product' && modalId) {
+       window.showPanel('products');
+       setTimeout(() => window.editProduct(modalId), 50);
+    } else if (modalType === 'edit_page' && modalId) {
+       window.selectPage(modalId);
+    }
+
+    if (sessionStorage.getItem('admin_show_success') === 'true') {
+       sessionStorage.removeItem('admin_show_success');
+       window.showSuccess();
+    }
+  }, 100);
 });
 
 // ─── PAINEL NAVIGATION ───────────────────────────────
 window.showPanel = function(id, el) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  const target = document.getElementById('panel-' + id);
-  if (target) target.classList.add('active');
-  if (el) el.classList.add('active');
   const titles = {
     dashboard:'Dashboard', pages:'Páginas', hero:'Hero / Banner',
     products:'Produtos', media:'Mídias', seo:'SEO',
     contato:'Contato', quemsomos:'Quem Somos',
   };
+
+  // Se for uma seção de edição, abre no modal
+  const isEdit = ['hero', 'seo', 'contato', 'quemsomos'].includes(id);
+  
+  if (isEdit) {
+    window.openEditModal(id, titles[id]);
+    return;
+  }
+
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  
+  const target = document.getElementById('panel-' + id);
+  if (target) target.classList.add('active');
+  if (el) el.classList.add('active');
+  
   document.getElementById('topbar-title').textContent = titles[id] || id;
   if (id === 'products') window.renderProductsGrid();
   if (id === 'media')    window.renderMediaGrid();
+
+  sessionStorage.setItem('admin_active_panel', id);
 }
 
-// ─── IMAGE DRAG & DROP ───────────────────────────────
+// ─── MODAL EDIT HELPERS ──────────────────────────────
+window.openEditModal = function(id, title) {
+  const modal = document.getElementById('modal-edit');
+  const body = document.getElementById('modal-edit-body');
+  const titleEl = document.getElementById('modal-edit-title');
+  
+  titleEl.textContent = title;
+  
+  // Move o painel para dentro do modal
+  const panel = document.getElementById('panel-' + id);
+  if (panel) {
+    body.innerHTML = '';
+    body.appendChild(panel);
+    panel.classList.add('active');
+    modal.classList.add('active');
+    
+    // Ajustes específicos por seção
+    if (id === 'seo') window.updateSeoPreview();
+  }
+  
+  sessionStorage.setItem('admin_modal_type', 'edit_page');
+  sessionStorage.setItem('admin_modal_id', id);
+}
+
+window.closeEditModal = function() {
+  const modal = document.getElementById('modal-edit');
+  const body = document.getElementById('modal-edit-body');
+  
+  // Devolve o painel para o content original apenas se for um ".panel" fixo
+  const panel = body.firstElementChild;
+  if (panel && panel.classList.contains('panel')) {
+    document.querySelector('.content').appendChild(panel);
+    panel.classList.remove('active');
+  } else {
+    // Se for conteúdo dinâmico (ex: editor de produto), apenas limpa
+    body.innerHTML = '';
+  }
+  
+  modal.classList.remove('active');
+  sessionStorage.removeItem('admin_modal_type');
+  sessionStorage.removeItem('admin_modal_id');
+}
+
+window.showSuccess = function() {
+  document.getElementById('modal-success').classList.add('active');
+  sessionStorage.setItem('admin_show_success', 'true');
+}
+
+window.closeSuccessModal = function() {
+  document.getElementById('modal-success').classList.remove('active');
+  sessionStorage.removeItem('admin_show_success');
+}
+
+window.continueEditing = function() {
+  window.closeSuccessModal();
+}
+
+window.backToDashboard = function() {
+  window.closeSuccessModal();
+  window.closeEditModal();
+  window.showPanel('dashboard', document.querySelector('[onclick*="dashboard"]'));
+}
+
+// ─── MEDIA GERENCIADOR ───────────────────────────────
 window.dragOver  = (e,id) => { e.preventDefault(); document.getElementById(id)?.classList.add('dragover'); }
 window.dragLeave = (id)   => document.getElementById(id)?.classList.remove('dragover');
-window.dropFile  = (e, dropId, previewId) => {
+
+window.dropFile  = (e, dropId) => {
   e.preventDefault();
   document.getElementById(dropId)?.classList.remove('dragover');
-  if (e.dataTransfer.files.length) addImagePreviews(e.dataTransfer.files, previewId);
+  if (e.dataTransfer.files.length) window.uploadFiles(e.dataTransfer.files);
 }
+
+window.previewMultiple = (input) => {
+  if (input.files.length) window.uploadFiles(input.files);
+  input.value = ''; // reseta o input para permitir enviar a mesma imagem de novo se quiser
+}
+
 window.previewFile = (input, previewId, urlInputId) => {
   if (!input.files.length) return;
   const url = URL.createObjectURL(input.files[0]);
   document.getElementById(previewId).innerHTML = `<div class="img-preview-item"><img src="${url}" alt=""/></div>`;
   if (urlInputId) document.getElementById(urlInputId).value = url;
 }
-window.previewMultiple = (input, gridId) => addImagePreviews(input.files, gridId);
 
-function addImagePreviews(files, gridId) {
-  const grid = document.getElementById(gridId);
-  Array.from(files).forEach(file => {
-    if (!file.type.startsWith('image/')) return;
-    const url = URL.createObjectURL(file);
-    const item = document.createElement('div');
-    item.className = 'media-item';
-    item.innerHTML = `<img src="${url}" alt="${file.name}"/><div class="media-name">${file.name}</div>`;
-    grid.appendChild(item);
+window.uploadFiles = async function(files) {
+  const grid = document.getElementById('media-grid-previews');
+  // Optional loading state text
+  const originalHtml = grid.innerHTML;
+  
+  for (let file of Array.from(files)) {
+    if (!file.type.startsWith('image/')) continue;
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const res = await fetch('/api/admin/media', { method: 'POST', body: formData });
+      const r = await res.json();
+      if(!r.ok) {
+        alert('Erro ao enviar ' + file.name + ': ' + r.error);
+      }
+    } catch(e) { alert('Erro de conexão: ' + e.message); }
+  }
+  
+  // Reload full grid after all uploads finish
+  window.renderMediaGrid();
+}
+
+window.deleteMedia = async function(name) {
+  if (!confirm(`Tem certeza que deseja excluir "${name}"? Essa ação apagará a foto do servidor.`)) return;
+  try {
+    const res = await fetch('/api/admin/media', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name })
+    });
+    const r = await res.json();
+    if (r.ok) {
+      window.renderMediaGrid();
+    } else { alert('Erro ao excluir: ' + r.error); }
+  } catch(e) { alert('Erro: ' + e.message); }
+}
+
+window.copyUrl = function(url, btn) {
+  navigator.clipboard.writeText(url).then(() => {
+    const old = btn.textContent;
+    btn.textContent = 'Copiado!';
+    btn.style.background = '#d1fae5';
+    btn.style.color = '#065f46';
+    setTimeout(() => {
+      btn.textContent = old;
+      btn.style.background = '';
+      btn.style.color = '';
+    }, 1500);
   });
 }
 
-// ─── MEDIA GRID ──────────────────────────────────────
-window.renderMediaGrid = function() {
-  const images = [
-    { src:'https://nonaca.com.br/wp-content/uploads/2023/12/cracha-mini.jpg', name:'cracha-mini.jpg' },
-    { src:'https://nonaca.com.br/wp-content/uploads/2021/12/base-cordoesl-1.jpg', name:'base-cordoes.jpg' },
-    { src:'https://nonaca.com.br/wp-content/uploads/2024/04/pulseiras-3_600x450.jpg', name:'pulseiras.jpg' },
-    { src:'https://nonaca.com.br/wp-content/uploads/2021/12/base-cart-estudantess-1.jpg', name:'carteirinhas.jpg' },
-    { src:'https://nonaca.com.br/wp-content/uploads/2021/12/base-comandas-1.jpg', name:'comandas.jpg' },
-    { src:'https://nonaca.com.br/wp-content/uploads/2021/12/base-catracas-1.jpg', name:'catracas.jpg' },
-    { src:'https://nonaca.com.br/wp-content/uploads/2021/12/base-relogio-ponto-1.jpg', name:'relogio.jpg' },
-    { src:'https://nonaca.com.br/wp-content/uploads/2021/11/logo2-forte.png', name:'logo.png' },
-  ];
+window.renderMediaGrid = async function() {
   const grid = document.getElementById('media-grid-previews');
-  if (grid.childElementCount > 0) return;
-  images.forEach(img => {
-    const item = document.createElement('div'); item.className = 'media-item';
-    item.innerHTML = `<img src="${img.src}" alt="${img.name}" loading="lazy" onerror="this.parentElement.style.background='#f3f4f6'"/><div class="media-name">${img.name}</div>`;
-    item.onclick = () => item.classList.toggle('selected');
-    grid.appendChild(item);
-  });
+  if (!grid) return;
+  
+  grid.innerHTML = '<div style="color:var(--text-muted);font-size:12px;padding:1rem;">Carregando mídias...</div>';
+  
+  try {
+    const res = await fetch('/api/admin/media');
+    const r = await res.json();
+    if(r.ok) {
+      grid.innerHTML = '';
+      if(r.media.length === 0) {
+        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:#9ca3af;font-size:13px;background:#f8fafc;border-radius:12px;border:1px dashed var(--border)">Nenhuma imagem enviada ainda. Faça upload acima.</div>';
+      }
+      r.media.forEach(img => {
+        const relativeUrl = img.url;
+        const card = document.createElement('div');
+        card.className = 'media-card';
+        card.innerHTML = `
+          <img class="media-card-img" src="${img.url}" loading="lazy" alt="${img.name}" />
+          <div class="media-card-body">
+            <div class="media-card-name" title="${img.name}">${img.name}</div>
+            <div class="media-card-url-row">
+              <input class="media-card-input" readonly value="${relativeUrl}" onclick="this.select()"/>
+              <button class="media-card-btn-copy" onclick="copyUrl('${relativeUrl}', this)">Copiar</button>
+            </div>
+            <button class="media-card-btn-delete" onclick="deleteMedia('${img.name}')">Excluir</button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    } else {
+      grid.innerHTML = '<div style="color:red;font-size:12px">Erro: '+r.error+'</div>';
+    }
+  } catch(e) {
+    grid.innerHTML = '<div style="color:red;font-size:12px">Falha ao tentar ler arquivos do servidor: '+e.message+'</div>';
+  }
 }
 
 // ─── PRODUCTS GRID ───────────────────────────────────
@@ -852,13 +1082,11 @@ window.createProduct = async function() {
     const r = await res.json();
     if (r.ok) {
       productsData.push(newProduct);
-      window.showToast('toast-new');
+      window.showSuccess(); 
       setTimeout(() => {
         window.closeModal();
         window.renderProductsGrid();
-        // Abre o editor do produto recém-criado
-        window.editProduct(slug);
-      }, 1200);
+      }, 300);
     } else {
       alert('Erro ao criar produto: ' + (r.error || 'Tente novamente.'));
     }
@@ -904,10 +1132,13 @@ document.addEventListener('keydown', e => {
 window.editProduct = function(slug) {
   const p = productsData.find(x => x.slug === slug);
   if (!p) return;
-  const editor = document.getElementById('product-editor');
-  editor.style.display = 'block';
-  editor.innerHTML = `
-    <div class="section-heading" style="margin-top:0">Editando: ${p.name}</div>
+  
+  const modal = document.getElementById('modal-edit');
+  const body = document.getElementById('modal-edit-body');
+  const titleEl = document.getElementById('modal-edit-title');
+  
+  titleEl.textContent = `Editando: ${p.name}`;
+  body.innerHTML = `
     <div class="editor-grid">
       <div class="field-card">
         <div class="field-label">Nome do produto</div>
@@ -941,22 +1172,23 @@ window.editProduct = function(slug) {
       <div class="save-row">
         <a href="/${p.slug}" target="_blank" class="btn-preview">Ver produto →</a>
         <div style="display:flex;align-items:center;gap:10px">
-          <span class="toast" id="toast-prod">✓ Produto salvo!</span>
           <button class="btn-save" onclick="saveProduct('${p.slug}')">Salvar produto</button>
         </div>
       </div>
     </div>`;
 
-  editor.scrollIntoView({ behavior: 'smooth' });
+  modal.classList.add('active');
 
   // Inicia Quills dinâmicos — aguarda DOM
   setTimeout(() => {
-    // Limpa instâncias anteriores
     delete quills['prod-headline'];
     delete quills['prod-desc'];
     createQuill('prod-headline', TOOLBAR_SIMPLE, p.headline    || '');
     createQuill('prod-desc',     TOOLBAR_FULL,   p.description || '');
   }, 60);
+
+  sessionStorage.setItem('admin_modal_type', 'edit_product');
+  sessionStorage.setItem('admin_modal_id', slug);
 }
 
 // ─── SAVE PRODUCT ────────────────────────────────────
@@ -978,37 +1210,48 @@ window.saveProduct = async function(slug) {
     if (r.ok) {
       const idx = productsData.findIndex(p => p.slug === slug);
       if (idx > -1) Object.assign(productsData[idx], { name, headline, description: desc, image });
-      window.showToast('toast-prod');
+      window.showSuccess();
     } else { alert('Erro ao salvar: ' + (r.error || '')); }
   } catch(e) { alert('Erro: ' + e.message); }
 }
 
 // ─── SAVE HERO ───────────────────────────────────────
 window.saveHero = async function() {
-  const data = {
+  const heroData = {
     headline:         window.getQuillHtml('headline'),
     subheadline:      window.getQuillHtml('subheadline'),
     cta_primary_text: document.getElementById('cta-primary-text').value,
     cta_primary_url:  document.getElementById('cta-primary-url').value,
     hero_image:       document.getElementById('hero-img-url').value,
   };
+
   try {
-    const res = await fetch('/api/admin/content?file=pages.json');
-    const cur = await res.json();
-    cur.home = cur.home ?? {}; cur.home.hero = { ...(cur.home.hero || {}), ...data };
-    const save = await fetch('/api/admin/content', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ file:'pages.json', data: cur }),
+    // Mescla com dados existentes da home para não perder outros campos (titulos de seções, etc)
+    const homeData = { ...pagesData.home, hero: { ...(pagesData.home?.hero || {}), ...heroData } };
+
+    const res = await fetch('/api/admin/content', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        file: 'pages.json',
+        section: 'home',
+        data: homeData
+      }),
     });
-    const r = await save.json();
-    if (r.ok) window.showToast('toast-hero');
-    else alert('Erro: ' + (r.error || ''));
-  } catch(e) { alert('Erro: ' + e.message); }
+    const r = await res.json();
+    if (r.ok) {
+      pagesData.home = homeData;
+      window.showSuccess();
+    } else {
+      alert('Erro ao salvar: ' + (r.error || ''));
+    }
+  } catch(e) { alert('Erro de conexão: ' + e.message); }
 }
+
 
 // ─── SAVE CONTATO ────────────────────────────────────
 window.saveContato = async function() {
-  const data = {
+  const contatoData = {
     endereco:  window.getQuillHtml('endereco'),
     telefone1: document.getElementById('tel1').value,
     telefone2: document.getElementById('tel2').value,
@@ -1016,46 +1259,148 @@ window.saveContato = async function() {
     email:     document.getElementById('email').value,
   };
   try {
-    const res = await fetch('/api/admin/content?file=pages.json');
-    const cur = await res.json();
-    cur.contato = { ...(cur.contato || {}), ...data };
-    const save = await fetch('/api/admin/content', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ file:'pages.json', data: cur }),
+    const res = await fetch('/api/admin/content', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        file: 'pages.json',
+        section: 'contato',
+        data: contatoData
+      }),
     });
-    const r = await save.json();
-    if (r.ok) window.showToast('toast-contato');
-    else alert('Erro: ' + (r.error || ''));
+    const r = await res.json();
+    if (r.ok) {
+      pagesData.contato = contatoData;
+      window.showSuccess();
+    } else {
+      alert('Erro ao salvar contato: ' + (r.error || ''));
+    }
   } catch(e) { alert('Erro: ' + e.message); }
 }
 
+
 // ─── SAVE QUEM SOMOS ─────────────────────────────────
 window.saveQuemSomos = async function() {
-  const data = {
+  const qsData = {
     hero_headline: window.getQuillHtml('qs-headline'),
     about_text:    window.getQuillHtml('qs-about'),
   };
   try {
-    const res = await fetch('/api/admin/content?file=pages.json');
-    const cur = await res.json();
-    cur.quemsomos = { ...(cur.quemsomos || {}), ...data };
-    const save = await fetch('/api/admin/content', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ file:'pages.json', data: cur }),
+    const res = await fetch('/api/admin/content', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        file: 'pages.json',
+        section: 'quemsomos',
+        data: { ...pagesData.quemsomos, ...qsData }
+      }),
     });
-    const r = await save.json();
-    if (r.ok) window.showToast('toast-qs');
-    else alert('Erro: ' + (r.error || ''));
+    const r = await res.json();
+    if (r.ok) {
+      pagesData.quemsomos = { ...pagesData.quemsomos, ...qsData };
+      window.showSuccess();
+    } else {
+      alert('Erro ao salvar: ' + (r.error || ''));
+    }
   } catch(e) { alert('Erro: ' + e.message); }
 }
 
-// ─── SHOW TOAST ──────────────────────────────────────
-window.showToast = function(id) {
-  const t = document.getElementById(id);
-  if (!t) return;
-  t.classList.remove('show'); void t.offsetWidth; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2800);
+
+// ─── SEO LOGIC ───────────────────────────────────────
+window.updateSeoPreview = function() {
+  const page = document.getElementById('seo-page').value;
+  let data = null;
+
+  if (page === 'home' || page === 'quem-somos' || page === 'contato') {
+    const key = page.replace('-', '');
+    data = pagesData[key]?.seo;
+  } else {
+    data = productsData.find(p => p.slug === page)?.seo;
+  }
+
+  const title = data?.title || '';
+  const desc  = data?.description || '';
+
+  document.getElementById('seo-title').value = title;
+  document.getElementById('seo-description').value = desc;
+  
+  window.updateSeoVisuals();
 }
+
+window.updateSeoVisuals = function() {
+  const title = document.getElementById('seo-title').value;
+  const desc  = document.getElementById('seo-description').value;
+  const page  = document.getElementById('seo-page').value;
+
+  // Counts
+  document.getElementById('seo-title-count').textContent = `${title.length} / 60 caracteres`;
+  document.getElementById('seo-desc-count').textContent = `${desc.length} / 160 caracteres`;
+
+  // Visual Preview
+  document.getElementById('preview-slug').textContent = page;
+  document.getElementById('preview-title').textContent = title || 'Título da Página';
+  document.getElementById('preview-desc').textContent = desc || 'Descrição da página no Google...';
+}
+
+window.saveSeo = async function() {
+  const page = document.getElementById('seo-page').value;
+  const title = document.getElementById('seo-title').value;
+  const desc = document.getElementById('seo-description').value;
+  const seoData = { title, description: desc };
+
+  let payload = {};
+
+  if (page === 'home' || page === 'quem-somos' || page === 'contato') {
+    const key = page.replace('-', '');
+    payload = {
+      file: 'pages.json',
+      section: key,
+      data: { ...pagesData[key], seo: seoData }
+    };
+  } else {
+    // Update products.json (needs to send full list or atomic product update if API supported it)
+    // Current API content.ts overwrites 'section' or entire file.
+    // Let's assume we need to update the specific product in the products array.
+    const products = [...productsData];
+    const idx = products.findIndex(p => p.slug === page);
+    if (idx !== -1) {
+      products[idx] = { ...products[idx], seo: seoData };
+      payload = {
+        file: 'products.json',
+        data: products
+      };
+    }
+  }
+
+  try {
+    const res = await fetch('/api/admin/content', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const r = await res.json();
+    if (r.ok) {
+      // Sync local data
+      if (payload.file === 'pages.json') pagesData[payload.section].seo = seoData;
+      else productsData.find(p => p.slug === page).seo = seoData;
+      
+      window.showSuccess();
+    } else {
+      alert('Erro ao salvar SEO: ' + (r.error || ''));
+    }
+  } catch(e) { alert('Erro: ' + e.message); }
+}
+
+// Listeners para SEO inputs
+document.addEventListener('DOMContentLoaded', () => {
+  const t = document.getElementById('seo-title');
+  const d = document.getElementById('seo-description');
+  if(t) t.addEventListener('input', window.updateSeoVisuals);
+  if(d) d.addEventListener('input', window.updateSeoVisuals);
+  
+  // Inicializa primeiro preview
+  setTimeout(window.updateSeoPreview, 500); 
+});
 
 // ─── LOGOUT ──────────────────────────────────────────
 window.doLogout = async function() {
@@ -1065,15 +1410,26 @@ window.doLogout = async function() {
 
 // ─── PAGE SELECTOR ───────────────────────────────────
 window.selectPage = function(key, name) {
-  document.querySelectorAll('#page-selector button').forEach(b => {
-    b.style.background = ''; b.style.color = '';
-  });
-  event.target.style.background = '#1a4b8e';
-  event.target.style.color = '#fff';
-  const area = document.getElementById('page-editor-area');
-  if (key === 'home') area.innerHTML = '<p style="font-size:13px;color:#6b7280;padding:1rem 0">Use <strong>Hero / Banner</strong> no menu para editar a home.</p>';
-  else if (key === 'quemsomos') area.innerHTML = '<p style="font-size:13px;color:#6b7280;padding:1rem 0">Use <strong>Quem Somos</strong> no menu.</p>';
-  else area.innerHTML = `<p style="font-size:13px;color:#6b7280;padding:1rem 0">Use <strong>Produtos</strong> no menu e clique em "Editar" em <strong>${name}</strong>.</p>`;
+  const getNav = (id) => document.querySelector(`[onclick*="showPanel('${id}'"]`);
+
+  if (key === 'home') {
+    window.showPanel('hero', getNav('hero'));
+  } else if (key === 'quemsomos') {
+    window.showPanel('quemsomos', getNav('quemsomos'));
+  } else {
+    window.showPanel('products', getNav('products'));
+    setTimeout(() => window.editProduct(key), 80);
+  }
+}
+
+window.openSeo = function(page) {
+  const getNav = (id) => document.querySelector(`[onclick*="showPanel('${id}'"]`);
+  window.showPanel('seo', getNav('seo'));
+  const select = document.getElementById('seo-page');
+  if (select) {
+    select.value = page;
+    window.updateSeoPreview();
+  }
 }
 </script>
 

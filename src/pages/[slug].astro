@@ -14,8 +14,8 @@ const others = products.filter(p => p.slug !== product.slug).slice(0, 4);
 ---
 
 <BaseLayout
-  title={`${product.name} — Nonaca Sistema de Identificação`}
-  description={`${product.name} personalizados pela Nonaca. Qualidade, agilidade e tecnologia em Londrina/PR.`}
+  title={product.seo?.title || `${product.name} — Nonaca Sistema de Identificação`}
+  description={product.seo?.description || `${product.name} personalizados pela Nonaca. Qualidade, agilidade e tecnologia em Londrina/PR.`}
   image={product.image}
 >
   <!-- Hero -->

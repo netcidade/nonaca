@@ -4,43 +4,36 @@ export const prerender = false;
 
 // Senha padrão — altere via variável de ambiente ADMIN_PASSWORD no .env
 const SENHA = import.meta.env.ADMIN_PASSWORD ?? 'nonaca2025';
-const TOKEN  = import.meta.env.ADMIN_TOKEN   ?? 'nonaca2025';
+const TOKEN = import.meta.env.ADMIN_TOKEN   ?? 'nonaca2025';
+
+function json(data: any, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
 
 export const POST: APIRoute = async ({ request, cookies }) => {
   try {
-    const text = await request.text();
-    let password = '';
-    try {
-      password = JSON.parse(text).password ?? '';
-    } catch {
-      // fallback para form-data
-      const params = new URLSearchParams(text);
-      password = params.get('password') ?? '';
-    }
+    const body = await request.json();
+    const { password } = body;
 
     if (password === SENHA) {
       cookies.set('nonaca_admin_session', TOKEN, {
         httpOnly: true,
-        secure: false,   // true em produção HTTPS
+        secure: process.env.NODE_ENV === 'production',
         path: '/',
-        maxAge: 60 * 60 * 24 * 7,
+        maxAge: 60 * 60 * 24 * 7, // 7 dias
         sameSite: 'lax',
       });
-      return new Response(JSON.stringify({ ok: true }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return json({ ok: true });
     }
 
-    return new Response(JSON.stringify({ ok: false, error: 'Senha incorreta' }), {
-      status: 401,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return json({ ok: false, error: 'Senha incorreta' }, 401);
+
   } catch (err) {
-    console.error('[admin/login] erro:', err);
-    return new Response(JSON.stringify({ ok: false, error: String(err) }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    console.error('[Admin Login Error]:', err);
+    return json({ ok: false, error: 'Erro no servidor' }, 500);
   }
 };
+

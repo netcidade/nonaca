@@ -2,73 +2,145 @@
   {
     "slug": "crachas",
     "name": "Crachás",
-    "headline": "O crachá que <strong>representa</strong> sua empresa.",
-    "description": "<p>O <strong>crachá</strong> é a primeira entrega da empresa quando recepciona clientes, parceiros e colaboradores. Fortalece a marca, demonstra organização e cuidado.</p><p>Desde 1999 produzimos crachás com matéria prima de alta qualidade e excelência em impressão e acabamento.</p><h3>Tipos disponíveis</h3><ul><li>Crachá impresso em PVC</li><li>Credencial para evento</li><li>Cartão de consumo</li><li>Cartão fidelidade</li><li>Cartão de sócio</li></ul><h3>Tecnologias</h3><ul><li>Cartão de proximidade RFID</li><li>QR Code e Código de barras</li><li>Bluetooth e Híbrido</li></ul>",
-    "image": "https://nonaca.com.br/wp-content/uploads/2023/12/cracha-mini.jpg",
-    "features": ["Impressão em PVC", "Alta durabilidade", "RFID disponível", "Sem mínimo"],
+    "seo": {
+      "title": "Crachás Personalizados em PVC — Nonaca Londrina",
+      "description": "Fabricação de crachás em PVC de alta qualidade com tecnologia RFID, QR Code e código de barras. Atendimento em Londrina/PR."
+    },
+    "headline": "<p>O&nbsp;crachá&nbsp;que&nbsp;<strong>representa</strong>&nbsp;sua&nbsp;empresa.</p>",
+    "description": "<p>O&nbsp;<strong>crachá</strong>&nbsp;é&nbsp;a&nbsp;primeira&nbsp;entrega&nbsp;da&nbsp;empresa&nbsp;quando&nbsp;recepciona&nbsp;clientes,&nbsp;parceiros&nbsp;e&nbsp;colaboradores.&nbsp;Fortalece&nbsp;a&nbsp;marca,&nbsp;demonstra&nbsp;organização&nbsp;e&nbsp;cuidado.</p><p>Desde&nbsp;1999&nbsp;produzimos&nbsp;crachás&nbsp;com&nbsp;matéria&nbsp;prima&nbsp;de&nbsp;alta&nbsp;qualidade&nbsp;e&nbsp;excelência&nbsp;em&nbsp;impressão&nbsp;e&nbsp;acabamento.</p><h3>Tipos&nbsp;disponíveis</h3><ul><li>Crachá&nbsp;impresso&nbsp;em&nbsp;PVC</li><li>Credencial&nbsp;para&nbsp;evento</li><li>Cartão&nbsp;de&nbsp;consumo</li><li>Cartão&nbsp;fidelidade</li><li>Cartão&nbsp;de&nbsp;sócio</li></ul><h3>Tecnologias</h3><ul><li>Cartão&nbsp;de&nbsp;proximidade&nbsp;RFID</li><li>QR&nbsp;Code&nbsp;e&nbsp;Código&nbsp;de&nbsp;barras</li><li>Bluetooth&nbsp;e&nbsp;Híbrido</li></ul>",
+    "image": "/img/cracha-mini-1775050716136.jpg",
+    "features": [
+      "Impressão em PVC",
+      "Alta durabilidade",
+      "RFID disponível",
+      "Sem mínimo"
+    ],
     "navLabel": "Crachás"
   },
   {
     "slug": "cordoes",
     "name": "Cordões",
+    "seo": {
+      "title": "Cordões para Crachá Personalizados — Nonaca",
+      "description": "Cordões personalizados com sua logo e cores. Diversas opções de materiais, travas e acabamentos. Entrega rápida em Londrina."
+    },
     "headline": "Cordões que <strong>destacam</strong> sua marca.",
     "description": "<p>Os <strong>cordões personalizados</strong> para crachás são uma extensão da identidade visual da sua empresa. Personalizamos com sua logo, cores e texto.</p><p>Disponíveis em diversas espessuras, materiais e acabamentos para combinar com qualquer estilo corporativo ou evento.</p><h3>Opções de material</h3><ul><li>Cordão de poliéster</li><li>Cordão de nylon</li><li>Fita sublimada personalizada</li><li>Corrente metálica</li></ul>",
     "image": "https://nonaca.com.br/wp-content/uploads/2021/12/base-cordoesl-1.jpg",
-    "features": ["100% personalizável", "Logo impresso", "Vários materiais", "Clips e travas"],
+    "features": [
+      "100% personalizável",
+      "Logo impresso",
+      "Vários materiais",
+      "Clips e travas"
+    ],
     "navLabel": "Cordões"
   },
   {
     "slug": "pulseiras",
     "name": "Pulseiras",
-    "headline": "Pulseiras <strong>invioláveis</strong> para eventos e controle.",
-    "description": "<p>As <strong>pulseiras em poliéster inviolável</strong> são ideais para eventos, hospitais, parques e qualquer situação que exija identificação segura de pessoas.</p><p>Uma vez colocadas, não podem ser removidas sem corte, garantindo a integridade do controle de acesso.</p><h3>Características</h3><ul><li>Inviolável — não pode ser reutilizada</li><li>Numeração sequencial</li><li>Personalização com logo e dados</li><li>Resistente à água</li></ul>",
-    "image": "https://nonaca.com.br/wp-content/uploads/2024/04/pulseiras-3_600x450.jpg",
-    "features": ["Inviolável", "À prova d'água", "Numerada", "Personalizável"],
+    "seo": {
+      "title": "Pulseiras de Identificação Invioláveis — Nonaca",
+      "description": "Pulseiras para eventos e controle de acesso. Material resistente e inviolável. Personalização completa para sua segurança."
+    },
+    "headline": "<p>Pulseiras&nbsp;<strong><em>invioláveis&nbsp;</em></strong>para&nbsp;</p><p>eventos&nbsp;e&nbsp;controle.</p>",
+    "description": "<p>As&nbsp;<strong>pulseiras&nbsp;em&nbsp;poliéster&nbsp;inviolável</strong>&nbsp;são&nbsp;ideais&nbsp;para&nbsp;eventos,&nbsp;hospitais,&nbsp;parques&nbsp;e&nbsp;qualquer&nbsp;situação&nbsp;que&nbsp;exija&nbsp;identificação&nbsp;segura&nbsp;de&nbsp;pessoas.</p><p>Uma&nbsp;vez&nbsp;colocadas,&nbsp;não&nbsp;podem&nbsp;ser&nbsp;removidas&nbsp;sem&nbsp;corte,&nbsp;garantindo&nbsp;a&nbsp;integridade&nbsp;do&nbsp;controle&nbsp;de&nbsp;acesso.</p><h3>Características</h3><ul><li>Inviolável&nbsp;—&nbsp;não&nbsp;pode&nbsp;ser&nbsp;reutilizada</li><li>Numeração&nbsp;sequencial</li><li>Personalização&nbsp;com&nbsp;logo&nbsp;e&nbsp;dados</li><li>Resistente&nbsp;à&nbsp;água</li></ul>",
+    "image": "/img/pulseiras-3_600x450-1775050901141.webp",
+    "features": [
+      "Inviolável",
+      "À prova d'água",
+      "Numerada",
+      "Personalizável"
+    ],
     "navLabel": "Pulseiras"
   },
   {
     "slug": "carteira-de-estudante",
     "name": "Carteira de Estudante",
-    "headline": "Carteirinha estudantil com <strong>tecnologia e design</strong>.",
-    "description": "<p>A <strong>carteirinha de estudante</strong> da Nonaca é produzida em PVC rígido com impressão de alta resolução, garantindo durabilidade e visual profissional.</p><p>Ideal para instituições de ensino de todos os portes — escolas, faculdades, cursos livres e associações estudantis.</p><h3>Recursos disponíveis</h3><ul><li>Foto do estudante</li><li>QR Code para validação</li><li>Chip de proximidade</li><li>Hologramas de segurança</li><li>Validade configurável</li></ul>",
-    "image": "https://nonaca.com.br/wp-content/uploads/2021/12/base-cart-estudantess-1.jpg",
-    "features": ["PVC rígido", "QR Code", "Hologramas", "Com foto"],
+    "seo": {
+      "title": "Carteiras de Estudante em PVC — Nonaca",
+      "description": "Emissão de carteirinhas estudantis em PVC com QR Code e tecnologia de identificação rápida. Qualidade e durabilidade garantidas."
+    },
+    "headline": "<p>Carteirinha&nbsp;estudantil</p><p>com&nbsp;<strong>tecnologia&nbsp;e&nbsp;design</strong>.</p>",
+    "description": "<p>A&nbsp;<strong>carteirinha&nbsp;de&nbsp;estudante</strong>&nbsp;da&nbsp;Nonaca&nbsp;é&nbsp;produzida&nbsp;em&nbsp;PVC&nbsp;rígido&nbsp;com&nbsp;impressão&nbsp;de&nbsp;alta&nbsp;resolução,&nbsp;garantindo&nbsp;durabilidade&nbsp;e&nbsp;visual&nbsp;profissional.</p><p>Ideal&nbsp;para&nbsp;instituições&nbsp;de&nbsp;ensino&nbsp;de&nbsp;todos&nbsp;os&nbsp;portes&nbsp;—&nbsp;escolas,&nbsp;faculdades,&nbsp;cursos&nbsp;livres&nbsp;e&nbsp;associações&nbsp;estudantis.</p><h3>Recursos&nbsp;disponíveis</h3><ul><li>Foto&nbsp;do&nbsp;estudante</li><li>QR&nbsp;Code&nbsp;para&nbsp;validação</li><li>Chip&nbsp;de&nbsp;proximidade</li><li>Hologramas&nbsp;de&nbsp;segurança</li><li>Validade&nbsp;configurável</li></ul>",
+    "image": "/img/base-cart-estudantess-1-1775050824429.jpg",
+    "features": [
+      "PVC rígido",
+      "QR Code",
+      "Hologramas",
+      "Com foto"
+    ],
     "navLabel": "Carteira de Estudante"
   },
   {
     "slug": "comandas",
     "name": "Comandas",
+    "seo": {
+      "title": "Comandas Personalizadas para Restaurantes e Bares — Nonaca",
+      "description": "Controle de consumo com comandas em PVC personalizadas e tecnologia RFID. Agilidade e precisão no seu estabelecimento."
+    },
     "headline": "Comandas personalizadas para <strong>controle de consumo</strong>.",
     "description": "<p>As <strong>comandas de consumo personalizadas</strong> são essenciais para bares, restaurantes, festas e eventos que precisam controlar o consumo dos participantes.</p><p>Desenvolvemos sistemas integrados de comanda com tecnologia RFID para mais agilidade e precisão no atendimento.</p><h3>Tipos de comanda</h3><ul><li>Comanda de papel personalizada</li><li>Comanda em PVC reutilizável</li><li>Comanda eletrônica RFID</li><li>Pulseira-comanda integrada</li></ul>",
     "image": "https://nonaca.com.br/wp-content/uploads/2021/12/base-comandas-1.jpg",
-    "features": ["RFID disponível", "Reutilizável", "Integração de sistemas", "Personalizada"],
+    "features": [
+      "RFID disponível",
+      "Reutilizável",
+      "Integração de sistemas",
+      "Personalizada"
+    ],
     "navLabel": "Comandas"
   },
   {
     "slug": "catracas",
     "name": "Catracas",
+    "seo": {
+      "title": "Catracas de Acesso e Controle — Nonaca Londrina",
+      "description": "Venda, instalação e manutenção de catracas para controle de acesso. Integração com biometria e crachás RFID."
+    },
     "headline": "Catracas para <strong>controle de acesso</strong> inteligente.",
     "description": "<p>As <strong>catracas</strong> são a solução definitiva para controle de acesso de pessoas em empresas, academias, condomínios e eventos.</p><p>Trabalhamos com as melhores marcas do mercado, oferecendo instalação, configuração e suporte técnico completo.</p><h3>Tipos e recursos</h3><ul><li>Catraca tripé e full-height</li><li>Leitura por crachá RFID</li><li>Integração com biometria</li><li>Relatórios de acesso em tempo real</li><li>Integração com relógio de ponto</li></ul>",
     "image": "https://nonaca.com.br/wp-content/uploads/2021/12/base-catracas-1.jpg",
-    "features": ["RFID/Biometria", "Relatórios online", "Integração total", "Suporte técnico"],
+    "features": [
+      "RFID/Biometria",
+      "Relatórios online",
+      "Integração total",
+      "Suporte técnico"
+    ],
     "navLabel": "Catracas"
   },
   {
     "slug": "relogios-ponto",
     "name": "Relógios Ponto",
-    "headline": "Registro de ponto <strong>dentro da lei</strong>.",
+    "seo": {
+      "title": "Relógios de Ponto Homologados — Nonaca",
+      "description": "Relógio de ponto eletrônico homologado pelo MTE (Portaria 671). Soluções com biometria e software de gestão de RH."
+    },
+    "headline": "Relógios de ponto <strong>dentro da lei</strong>.",
     "description": "<p>Os <strong>relógios de ponto</strong> homologados pelo Ministério do Trabalho garantem o registro correto da jornada de trabalho dos seus colaboradores.</p><p>Soluções completas com software de gestão, relatórios e integração com folha de pagamento.</p><h3>Recursos</h3><ul><li>Portaria 671 — homologado MTE</li><li>Biometria digital</li><li>Reconhecimento facial</li><li>Exportação para sistemas de RH</li><li>Acesso remoto via web</li></ul>",
     "image": "https://nonaca.com.br/wp-content/uploads/2021/12/base-relogio-ponto-1.jpg",
-    "features": ["Homologado MTE", "Biometria", "Software incluso", "Suporte técnico"],
+    "features": [
+      "Homologado MTE",
+      "Biometria",
+      "Software incluso",
+      "Suporte técnico"
+    ],
     "navLabel": "Relógios Ponto"
   },
   {
     "slug": "acessorios",
     "name": "Acessórios",
-    "headline": "Acessórios para <strong>completar</strong> seu sistema de identificação.",
-    "description": "<p>A Nonaca oferece uma linha completa de <strong>acessórios</strong> para complementar seu sistema de identificação — porta-crachás, clips, retráteis e muito mais.</p><h3>Linha de acessórios</h3><ul><li>Porta-crachás rígidos e flexíveis</li><li>Clips jacaré e presilha borboleta</li><li>Retráteis com clip</li><li>Suportes de mesa para crachás</li><li>Badgeholders horizontais e verticais</li></ul>",
+    "seo": {
+      "title": "Acessórios para Crachás e Identificação — Nonaca",
+      "description": "Clips jacaré, porta-crachás, protetores rígidos e cordões. Linha completa de acessórios para seu sistema de identificação."
+    },
+    "headline": "<p>Acessórios&nbsp;para&nbsp;<strong>completar</strong>&nbsp;seu&nbsp;sistema&nbsp;de&nbsp;identificação.</p>",
+    "description": "<p>A&nbsp;Nonaca&nbsp;oferece&nbsp;uma&nbsp;linha&nbsp;completa&nbsp;de&nbsp;<strong>acessórios</strong>&nbsp;para&nbsp;complementar&nbsp;seu&nbsp;sistema&nbsp;de&nbsp;identificação&nbsp;—&nbsp;porta-crachás,&nbsp;clips,&nbsp;retráteis&nbsp;e&nbsp;muito&nbsp;mais.</p><h3>Linha&nbsp;de&nbsp;acessórios</h3><ul><li>Porta-crachás&nbsp;rígidos&nbsp;e&nbsp;flexíveis</li><li>Clips&nbsp;jacaré&nbsp;e&nbsp;presilha&nbsp;borboleta</li><li>Retráteis&nbsp;com&nbsp;clip</li><li>Suportes&nbsp;de&nbsp;mesa&nbsp;para&nbsp;crachás</li><li>Badgeholders&nbsp;horizontais&nbsp;e&nbsp;verticais</li></ul>",
     "image": "https://nonaca.com.br/wp-content/uploads/2021/12/WhatsApp-Image-2025-07-10-at-13.47.14_a9388683-615x1024.jpg",
-    "features": ["Porta-crachás", "Clips e retráteis", "Diversos modelos", "Atacado e varejo"],
+    "features": [
+      "Porta-crachás",
+      "Clips e retráteis",
+      "Diversos modelos",
+      "Atacado e varejo"
+    ],
     "navLabel": "Acessórios"
   }
 ]
