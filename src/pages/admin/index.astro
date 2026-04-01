@@ -11,7 +11,9 @@ import content from '../../content/pages.json';
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Nonaca Admin</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
-  <style>
+  <!-- Quill WYSIWYG -->
+  <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet"/>
+  <style is:global>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --sidebar-bg: #0f2d57;
@@ -66,7 +68,7 @@ import content from '../../content/pages.json';
     .topbar {
       background: var(--white); border-bottom: 1px solid var(--border);
       padding: 0 1.5rem; height: 56px; display: flex; align-items: center; justify-content: space-between;
-      flex-shrink: 0; sticky top: 0; z-index: 10;
+      flex-shrink: 0; position: sticky; top: 0; z-index: 10;
     }
     .topbar-title { font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 600; color: var(--blue); }
     .topbar-right { display: flex; align-items: center; gap: 10px; }
@@ -109,33 +111,52 @@ import content from '../../content/pages.json';
     .btn-seo { background: var(--bg); color: var(--text-muted); border: 1px solid var(--border); border-radius: 7px; padding: 5px 13px; font-size: 11px; cursor: pointer; transition: all 0.15s; font-family: 'Inter', sans-serif; }
     .btn-seo:hover { border-color: var(--blue); color: var(--blue); }
 
-    /* Editor */
+    /* Editor grid e campos */
     .editor-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
     .field-card { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 1rem 1.25rem; }
-    .field-label { font-size: 10px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+    .field-label { font-size: 10px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
     .badge-html { font-size: 9px; background: #ECFDF5; color: #065f46; border: 1px solid #6ee7b7; padding: 1px 6px; border-radius: 10px; font-weight: 600; }
-    .badge-img { font-size: 9px; background: #FFF7ED; color: #92400e; border: 1px solid #fed7aa; padding: 1px 6px; border-radius: 10px; font-weight: 600; }
-    .field-input { width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 13px; font-family: 'Inter', sans-serif; outline: none; background: #fafafa; transition: border-color 0.15s; }
-    .field-input:focus { border-color: var(--blue); background: #fff; box-shadow: 0 0 0 3px rgba(26,75,142,0.08); }
+    .badge-img  { font-size: 9px; background: #FFF7ED; color: #92400e; border: 1px solid #fed7aa; padding: 1px 6px; border-radius: 10px; font-weight: 600; }
+    .field-input { width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 13px; font-family: 'Inter', sans-serif; outline: none; background: #fafafa; transition: border-color .15s; }
+    .field-input:focus { border-color: var(--blue); background: #fff; box-shadow: 0 0 0 3px rgba(26,75,142,.08); }
     .field-select { width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 13px; font-family: 'Inter', sans-serif; outline: none; background: #fafafa; height: 36px; }
-    .field-textarea { width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 13px; font-family: 'Inter', sans-serif; outline: none; background: #fafafa; resize: vertical; min-height: 80px; line-height: 1.6; transition: border-color 0.15s; }
-    .field-textarea:focus { border-color: var(--blue); background: #fff; box-shadow: 0 0 0 3px rgba(26,75,142,0.08); }
+    .field-textarea { width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 13px; font-family: 'Inter', sans-serif; outline: none; background: #fafafa; resize: vertical; min-height: 80px; line-height: 1.6; transition: border-color .15s; }
+    .field-textarea:focus { border-color: var(--blue); background: #fff; box-shadow: 0 0 0 3px rgba(26,75,142,.08); }
 
-    /* Rich text toolbar */
-    .rte-toolbar { display: flex; flex-wrap: wrap; gap: 2px; padding: 6px 8px; background: #f8f9fa; border: 1px solid var(--border); border-radius: 8px 8px 0 0; border-bottom: none; }
-    .rte-btn { width: 26px; height: 26px; border-radius: 5px; background: transparent; border: 1px solid transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 11px; font-weight: 600; color: var(--text-muted); transition: all 0.1s; font-family: 'Inter', sans-serif; }
-    .rte-btn:hover { background: #fff; border-color: var(--border); color: var(--blue); }
-    .rte-sep { width: 1px; background: var(--border); margin: 2px 3px; align-self: stretch; }
-    .rte-area {
-      border: 1px solid var(--border); border-radius: 0 0 8px 8px; padding: 10px 12px;
-      min-height: 80px; font-size: 13px; font-family: 'Inter', sans-serif; line-height: 1.7;
-      outline: none; background: #fff;
+    /* Quill customizado — tema Nonaca */
+    .ql-wrapper { border-radius: 10px; overflow: hidden; border: 1.5px solid var(--border); transition: border-color .15s; }
+    .ql-wrapper:focus-within { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(26,75,142,.08); }
+    .ql-wrapper .ql-toolbar { background: #f8fafc; border: none; border-bottom: 1px solid var(--border); padding: 6px 10px; font-family: 'Inter', sans-serif; }
+    .ql-wrapper .ql-container { border: none; font-family: 'Inter', sans-serif; font-size: 13px; }
+    .ql-wrapper .ql-editor { min-height: 100px; padding: 10px 14px; line-height: 1.7; }
+    .ql-wrapper .ql-editor.ql-blank::before { font-style: normal; color: #9ca3af; font-size: 13px; }
+    .ql-wrapper.ql-tall .ql-editor { min-height: 180px; }
+    /* Toolbar buttons cor Nonaca */
+    .ql-wrapper .ql-toolbar button:hover,
+    .ql-wrapper .ql-toolbar button.ql-active { color: var(--blue) !important; }
+    .ql-wrapper .ql-toolbar button:hover .ql-stroke,
+    .ql-wrapper .ql-toolbar button.ql-active .ql-stroke { stroke: var(--blue) !important; }
+    .ql-wrapper .ql-toolbar button:hover .ql-fill,
+    .ql-wrapper .ql-toolbar button.ql-active .ql-fill { fill: var(--blue) !important; }
+    .ql-wrapper .ql-toolbar .ql-picker-label:hover { color: var(--blue); }
+    /* Toggle modo HTML */
+    .html-toggle { display:flex; align-items:center; gap:6px; margin-top:6px; }
+    .html-toggle button {
+      font-size:10px; padding:3px 10px; border-radius:6px; cursor:pointer;
+      border:1px solid var(--border); background:#f8fafc; color:var(--text-muted);
+      font-family:'Inter',sans-serif; transition:all .15s;
     }
-    .rte-area:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(26,75,142,0.08); }
-    .rte-area[data-mode="code"] { font-family: monospace; font-size: 12px; background: #f8f9fa; white-space: pre-wrap; }
+    .html-toggle button.active { background:var(--blue); color:#fff; border-color:var(--blue); }
+    .html-source {
+      display:none; width:100%; min-height:100px; padding:10px 14px;
+      font-family:monospace; font-size:12px; line-height:1.65; resize:vertical;
+      border:1.5px solid var(--blue); border-radius:10px; background:#f8fafc;
+      outline:none; color:var(--text);
+    }
+    .html-source.visible { display:block; }
 
     /* Image upload */
-    .img-drop { border: 2px dashed var(--border); border-radius: 10px; padding: 1.25rem; text-align: center; cursor: pointer; transition: all 0.15s; background: #fafafa; }
+    .img-drop { border: 2px dashed var(--border); border-radius: 10px; padding: 1.25rem; text-align: center; cursor: pointer; transition: all .15s; background: #fafafa; }
     .img-drop:hover, .img-drop.dragover { border-color: var(--blue); background: #EBF2FB; }
     .img-drop-icon { font-size: 24px; margin-bottom: 6px; }
     .img-drop-text { font-size: 12px; color: var(--text-muted); }
@@ -143,22 +164,21 @@ import content from '../../content/pages.json';
     .img-preview-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
     .img-preview-item { position: relative; }
     .img-preview-item img { width: 72px; height: 54px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); }
-    .img-remove { position: absolute; top: -5px; right: -5px; width: 16px; height: 16px; background: #ef4444; color: #fff; border: none; border-radius: 50%; font-size: 9px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
     /* Save row */
     .save-row { display: flex; align-items: center; justify-content: space-between; margin-top: 1rem; flex-wrap: wrap; gap: 8px; }
-    .btn-save { background: var(--blue); color: #fff; border: none; border-radius: 10px; padding: 9px 22px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; font-family: 'Poppins', sans-serif; }
+    .btn-save { background: var(--blue); color: #fff; border: none; border-radius: 10px; padding: 9px 22px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .15s; font-family: 'Poppins', sans-serif; }
     .btn-save:hover { background: var(--blue-light); transform: translateY(-1px); }
-    .btn-preview { background: transparent; color: var(--text-muted); border: 1px solid var(--border); border-radius: 10px; padding: 8px 16px; font-size: 13px; cursor: pointer; transition: all 0.15s; font-family: 'Inter', sans-serif; text-decoration: none; display: inline-block; }
+    .btn-preview { background: transparent; color: var(--text-muted); border: 1px solid var(--border); border-radius: 10px; padding: 8px 16px; font-size: 13px; cursor: pointer; transition: all .15s; font-family: 'Inter', sans-serif; text-decoration: none; display: inline-block; }
     .btn-preview:hover { border-color: var(--blue); color: var(--blue); }
     .toast { display: none; font-size: 11px; color: #065f46; background: #ECFDF5; border: 1px solid #6ee7b7; padding: 6px 14px; border-radius: 8px; }
     .toast.show { display: inline-block; animation: fadeInOut 2.5s forwards; }
     @keyframes fadeInOut { 0%{opacity:0} 10%{opacity:1} 80%{opacity:1} 100%{opacity:0} }
 
-    /* Products list */
+    /* Products */
     .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
-    .product-card-admin { background: var(--white); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; transition: border-color 0.15s, box-shadow 0.15s; cursor: pointer; }
-    .product-card-admin:hover { border-color: var(--blue-light); box-shadow: 0 4px 12px rgba(26,75,142,0.08); }
+    .product-card-admin { background: var(--white); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; transition: border-color .15s, box-shadow .15s; cursor: pointer; }
+    .product-card-admin:hover { border-color: var(--blue-light); box-shadow: 0 4px 12px rgba(26,75,142,.08); }
     .product-card-img { width: 100%; height: 120px; object-fit: cover; }
     .product-card-body { padding: 10px 12px; }
     .product-card-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
@@ -170,7 +190,7 @@ import content from '../../content/pages.json';
     .seo-url { font-size: 11px; color: #1a7f37; font-family: monospace; margin-bottom: 4px; }
     .seo-title-prev { font-size: 16px; color: #1558d6; font-weight: 400; margin-bottom: 3px; }
     .seo-desc-prev { font-size: 12px; color: #4d5156; line-height: 1.5; }
-    .seo-label { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; }
+    .seo-label { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 5px; }
 
     /* Media grid */
     .media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; margin-top: 12px; }
@@ -197,37 +217,37 @@ import content from '../../content/pages.json';
   </div>
 
   <div class="nav-section-label">Conteúdo</div>
-  <a href="#" class="nav-item active" onclick="showPanel('dashboard',this)">
+  <a href="javascript:void(0)" class="nav-item active" onclick="showPanel('dashboard',this);return false">
     <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
     Dashboard
   </a>
-  <a href="#" class="nav-item" onclick="showPanel('pages',this)">
+  <a href="javascript:void(0)" class="nav-item" onclick="showPanel('pages',this)">
     <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
     Páginas
   </a>
-  <a href="#" class="nav-item" onclick="showPanel('hero',this)">
+  <a href="javascript:void(0)" class="nav-item" onclick="showPanel('hero',this)">
     <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
     Hero / Banner
   </a>
-  <a href="#" class="nav-item" onclick="showPanel('products',this)">
+  <a href="javascript:void(0)" class="nav-item" onclick="showPanel('products',this)">
     <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
     Produtos
   </a>
-  <a href="#" class="nav-item" onclick="showPanel('media',this)">
+  <a href="javascript:void(0)" class="nav-item" onclick="showPanel('media',this)">
     <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
     Mídias
   </a>
 
   <div class="nav-section-label">Configurações</div>
-  <a href="#" class="nav-item" onclick="showPanel('seo',this)">
+  <a href="javascript:void(0)" class="nav-item" onclick="showPanel('seo',this)">
     <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     SEO
   </a>
-  <a href="#" class="nav-item" onclick="showPanel('contato',this)">
+  <a href="javascript:void(0)" class="nav-item" onclick="showPanel('contato',this)">
     <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.6 3.35 2 2 0 0 1 3.57 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.1A16 16 0 0 0 16 16.09l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
     Contato
   </a>
-  <a href="#" class="nav-item" onclick="showPanel('quemsomos',this)">
+  <a href="javascript:void(0)" class="nav-item" onclick="showPanel('quemsomos',this)">
     <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
     Quem Somos
   </a>
@@ -337,28 +357,27 @@ import content from '../../content/pages.json';
     <div class="panel" id="panel-hero">
       <div class="section-heading">Hero / Banner principal</div>
       <div class="editor-grid">
+
         <div class="field-card">
-          <div class="field-label">Headline <span class="badge-html">HTML</span></div>
-          <div class="rte-toolbar" id="tb-headline">
-            <button class="rte-btn" onclick="rteCmd('bold','headline')" title="Negrito"><b>B</b></button>
-            <button class="rte-btn" onclick="rteCmd('italic','headline')" title="Itálico"><i>I</i></button>
-            <button class="rte-btn" onclick="rteCmd('underline','headline')" title="Sublinhado"><u>U</u></button>
-            <div class="rte-sep"></div>
-            <button class="rte-btn" onclick="rteInsert('headline','<br>')" title="Quebra de linha">⏎</button>
-            <button class="rte-btn" onclick="rteToggleMode('headline')" title="Código HTML" style="font-family:monospace">&lt;/&gt;</button>
+          <div class="field-label">Headline <span class="badge-html">WYSIWYG</span></div>
+          <div class="ql-wrapper" id="ql-wrap-headline">
+            <div id="ql-headline"></div>
           </div>
-          <div class="rte-area" id="rte-headline" contenteditable="true">Sua <strong>identidade</strong><br>começa aqui.</div>
+          <div class="html-toggle">
+            <button onclick="toggleHtmlMode('headline')" id="btn-html-headline">&lt;/&gt; Ver HTML</button>
+          </div>
+          <textarea class="html-source" id="html-headline" placeholder="HTML direto..."></textarea>
         </div>
 
         <div class="field-card">
-          <div class="field-label">Subtítulo <span class="badge-html">HTML</span></div>
-          <div class="rte-toolbar">
-            <button class="rte-btn" onclick="rteCmd('bold','subheadline')"><b>B</b></button>
-            <button class="rte-btn" onclick="rteCmd('italic','subheadline')"><i>I</i></button>
-            <div class="rte-sep"></div>
-            <button class="rte-btn" onclick="rteToggleMode('subheadline')" style="font-family:monospace">&lt;/&gt;</button>
+          <div class="field-label">Subtítulo <span class="badge-html">WYSIWYG</span></div>
+          <div class="ql-wrapper" id="ql-wrap-subheadline">
+            <div id="ql-subheadline"></div>
           </div>
-          <div class="rte-area" id="rte-subheadline" contenteditable="true">Crachás, cordões, pulseiras e sistemas de identificação. <strong>Mais de 25 anos</strong> em Londrina/PR.</div>
+          <div class="html-toggle">
+            <button onclick="toggleHtmlMode('subheadline')" id="btn-html-subheadline">&lt;/&gt; Ver HTML</button>
+          </div>
+          <textarea class="html-source" id="html-subheadline" placeholder="HTML direto..."></textarea>
         </div>
 
         <div class="field-card" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
@@ -374,7 +393,7 @@ import content from '../../content/pages.json';
 
         <div class="field-card">
           <div class="field-label">Imagem do crachá flutuante <span class="badge-img">IMAGEM</span></div>
-          <div class="img-drop" id="hero-drop" onclick="document.getElementById('hero-file').click()" ondragover="dragOver(event,'hero-drop')" ondragleave="dragLeave('hero-drop')" ondrop="dropFile(event,'hero-drop','hero-img-preview')">
+          <div class="img-drop" onclick="document.getElementById('hero-file').click()" ondragover="dragOver(event,'hero-drop')" ondragleave="dragLeave('hero-drop')" ondrop="dropFile(event,'hero-drop','hero-img-preview')" id="hero-drop">
             <div class="img-drop-icon">🖼️</div>
             <div class="img-drop-text">Clique ou arraste para enviar</div>
             <div class="img-drop-sub">PNG, JPG, WebP — máx. 5MB</div>
@@ -394,7 +413,7 @@ import content from '../../content/pages.json';
         <div class="save-row">
           <a href="/" target="_blank" class="btn-preview">Pré-visualizar site →</a>
           <div style="display:flex;align-items:center;gap:10px">
-            <span class="toast" id="toast-hero">✓ Hero salvo com sucesso!</span>
+            <span class="toast" id="toast-hero">✓ Hero salvo!</span>
             <button class="btn-save" onclick="saveHero()">Salvar hero</button>
           </div>
         </div>
@@ -403,10 +422,60 @@ import content from '../../content/pages.json';
 
     <!-- PRODUCTS -->
     <div class="panel" id="panel-products">
-      <div class="section-heading">Editar produtos</div>
-      <p style="font-size:13px;color:#6b7280;margin-bottom:1rem">Clique em um produto para editar nome, descrição, imagem e diferenciais.</p>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+        <div>
+          <div class="section-heading" style="margin-bottom:2px">Editar produtos</div>
+          <p style="font-size:13px;color:#6b7280">Clique em "Editar" para modificar ou adicione um novo produto.</p>
+        </div>
+        <button class="btn-save" onclick="openNewProduct()" style="display:flex;align-items:center;gap:6px;white-space:nowrap">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Novo produto
+        </button>
+      </div>
       <div class="products-grid" id="products-grid"></div>
       <div id="product-editor" style="display:none;margin-top:1.5rem"></div>
+    </div>
+
+    <!-- MODAL NOVO PRODUTO -->
+    <div id="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;align-items:center;justify-content:center">
+      <div style="background:#fff;border-radius:18px;padding:1.75rem;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;margin:1rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem">
+          <div style="font-family:'Poppins',sans-serif;font-size:15px;font-weight:600;color:#1a4b8e">Novo produto</div>
+          <button onclick="closeModal()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#9ca3af;line-height:1">×</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:1rem">
+          <div>
+            <div class="field-label">Slug (URL) <span style="color:#ef4444;font-size:9px">sem espaços, só letras e hífens</span></div>
+            <input class="field-input" id="new-slug" placeholder="ex: etiquetas" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'-')"/>
+          </div>
+          <div>
+            <div class="field-label">Nome do produto</div>
+            <input class="field-input" id="new-name" placeholder="ex: Etiquetas Personalizadas"/>
+          </div>
+          <div>
+            <div class="field-label">Headline <span class="badge-html">HTML</span></div>
+            <input class="field-input" id="new-headline" placeholder='ex: Etiquetas que <strong>identificam</strong> sua marca.'/>
+          </div>
+          <div>
+            <div class="field-label">Descrição resumida</div>
+            <textarea class="field-textarea" id="new-description" rows="4" placeholder="Descreva o produto... (aceita HTML)"></textarea>
+          </div>
+          <div>
+            <div class="field-label">URL da imagem</div>
+            <input class="field-input" id="new-image" placeholder="https://..." oninput="updateNewImgPreview(this.value)"/>
+            <img id="new-img-preview" src="" alt="" style="margin-top:8px;height:70px;border-radius:8px;border:1px solid #e5e7eb;object-fit:cover;display:none"/>
+          </div>
+          <div>
+            <div class="field-label">Diferenciais (separados por vírgula)</div>
+            <input class="field-input" id="new-features" placeholder="ex: Personalizado, Rápido, Sem mínimo"/>
+          </div>
+          <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:.5rem">
+            <button onclick="closeModal()" class="btn-preview">Cancelar</button>
+            <button onclick="createProduct()" class="btn-save">Criar produto</button>
+          </div>
+          <span class="toast" id="toast-new" style="text-align:center">✓ Produto criado!</span>
+        </div>
+      </div>
     </div>
 
     <!-- MEDIA -->
@@ -466,14 +535,14 @@ import content from '../../content/pages.json';
       <div class="section-heading">Informações de contato</div>
       <div class="editor-grid">
         <div class="field-card">
-          <div class="field-label">Endereço <span class="badge-html">HTML</span></div>
-          <div class="rte-toolbar">
-            <button class="rte-btn" onclick="rteCmd('bold','endereco')"><b>B</b></button>
-            <button class="rte-btn" onclick="rteInsert('endereco','<br>')">⏎</button>
-            <div class="rte-sep"></div>
-            <button class="rte-btn" onclick="rteToggleMode('endereco')" style="font-family:monospace">&lt;/&gt;</button>
+          <div class="field-label">Endereço <span class="badge-html">WYSIWYG</span></div>
+          <div class="ql-wrapper" id="ql-wrap-endereco">
+            <div id="ql-endereco"></div>
           </div>
-          <div class="rte-area" id="rte-endereco" contenteditable="true">Rua Eduardo Benjamin Hosken, 200<br>CEP: 86020-440 — Londrina/PR</div>
+          <div class="html-toggle">
+            <button onclick="toggleHtmlMode('endereco')" id="btn-html-endereco">&lt;/&gt; Ver HTML</button>
+          </div>
+          <textarea class="html-source" id="html-endereco"></textarea>
         </div>
         <div class="field-card" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
           <div>
@@ -508,34 +577,30 @@ import content from '../../content/pages.json';
       <div class="section-heading">Editar — Quem Somos</div>
       <div class="editor-grid">
         <div class="field-card">
-          <div class="field-label">Headline <span class="badge-html">HTML</span></div>
-          <div class="rte-toolbar">
-            <button class="rte-btn" onclick="rteCmd('bold','qs-headline')"><b>B</b></button>
-            <button class="rte-btn" onclick="rteCmd('italic','qs-headline')"><i>I</i></button>
-            <button class="rte-btn" onclick="rteToggleMode('qs-headline')" style="font-family:monospace">&lt;/&gt;</button>
+          <div class="field-label">Headline <span class="badge-html">WYSIWYG</span></div>
+          <div class="ql-wrapper" id="ql-wrap-qs-headline">
+            <div id="ql-qs-headline"></div>
           </div>
-          <div class="rte-area" id="rte-qs-headline" contenteditable="true">25 anos identificando <strong>pessoas e marcas</strong>.</div>
+          <div class="html-toggle">
+            <button onclick="toggleHtmlMode('qs-headline')" id="btn-html-qs-headline">&lt;/&gt; Ver HTML</button>
+          </div>
+          <textarea class="html-source" id="html-qs-headline"></textarea>
         </div>
         <div class="field-card">
-          <div class="field-label">Texto "Sobre nós" <span class="badge-html">HTML</span></div>
-          <div class="rte-toolbar">
-            <button class="rte-btn" onclick="rteCmd('bold','qs-about')"><b>B</b></button>
-            <button class="rte-btn" onclick="rteCmd('italic','qs-about')"><i>I</i></button>
-            <button class="rte-btn" onclick="rteInsertTag('qs-about','p')">P</button>
-            <button class="rte-btn" onclick="rteInsertTag('qs-about','h3')">H3</button>
-            <div class="rte-sep"></div>
-            <button class="rte-btn" onclick="rteToggleMode('qs-about')" style="font-family:monospace">&lt;/&gt;</button>
+          <div class="field-label">Texto "Sobre nós" <span class="badge-html">WYSIWYG</span></div>
+          <div class="ql-wrapper ql-tall" id="ql-wrap-qs-about">
+            <div id="ql-qs-about"></div>
           </div>
-          <div class="rte-area" id="rte-qs-about" contenteditable="true" style="min-height:120px">
-            <p>A <strong>Nonaca</strong> nasceu em 1999 com uma missão clara: qualidade, organização e cuidado em cada produto.</p>
-            <p>Somos especializados em crachás PVC, cordões, pulseiras, carteirinhas, comandas, catracas e relógios de ponto.</p>
+          <div class="html-toggle">
+            <button onclick="toggleHtmlMode('qs-about')" id="btn-html-qs-about">&lt;/&gt; Ver HTML</button>
           </div>
+          <textarea class="html-source" id="html-qs-about"></textarea>
         </div>
         <div class="save-row">
           <a href="/quem-somos" target="_blank" class="btn-preview">Pré-visualizar →</a>
           <div style="display:flex;align-items:center;gap:10px">
             <span class="toast" id="toast-qs">✓ Salvo!</span>
-            <button class="btn-save" onclick="showToast('toast-qs')">Salvar</button>
+            <button class="btn-save" onclick="saveQuemSomos()">Salvar</button>
           </div>
         </div>
       </div>
@@ -544,100 +609,127 @@ import content from '../../content/pages.json';
   </div>
 </div>
 
-<script define:vars={{ productsData: products }}>
-// Panel navigation
-function showPanel(id, el) {
+
+<!-- Quill JS — carregado no final para não bloquear render -->
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+<script define:vars={{ productsData: products, pagesData: content }}>
+
+// ─── TOOLBAR COMPLETA ────────────────────────────────
+const TOOLBAR_FULL = [
+  [{ header: [1, 2, 3, false] }],
+  ['bold', 'italic', 'underline', 'strike'],
+  [{ color: [] }, { background: [] }],
+  [{ list: 'ordered' }, { list: 'bullet' }],
+  [{ align: [] }],
+  ['link'],
+  ['clean'],
+];
+
+const TOOLBAR_SIMPLE = [
+  ['bold', 'italic', 'underline'],
+  [{ color: [] }],
+  ['link', 'clean'],
+];
+
+// Mapa de instâncias Quill: id → Quill instance
+const quills = {};
+
+// ─── CRIA EDITOR QUILL ───────────────────────────────
+function createQuill(id, toolbar, initialHtml) {
+  const el = document.getElementById('ql-' + id);
+  if (!el || quills[id]) return;
+  const q = new Quill(el, {
+    theme: 'snow',
+    modules: { toolbar },
+    placeholder: 'Digite aqui...',
+  });
+  if (initialHtml) q.clipboard.dangerouslyPasteHTML(initialHtml);
+  quills[id] = q;
+  // Sincroniza textarea de código ao digitar
+  q.on('text-change', () => {
+    const ta = document.getElementById('html-' + id);
+    if (ta && !ta.classList.contains('visible')) return;
+    if (ta) ta.value = q.getSemanticHTML();
+  });
+  return q;
+}
+
+// ─── TOGGLE MODO HTML ────────────────────────────────
+window.toggleHtmlMode = function(id) {
+  const ta  = document.getElementById('html-' + id);
+  const btn = document.getElementById('btn-html-' + id);
+  const q   = quills[id];
+  if (!ta || !q) return;
+
+  if (ta.classList.contains('visible')) {
+    // Volta pro WYSIWYG — aplica o HTML editado
+    q.clipboard.dangerouslyPasteHTML(ta.value);
+    ta.classList.remove('visible');
+    btn.classList.remove('active');
+    btn.textContent = '</> Ver HTML';
+  } else {
+    // Mostra HTML
+    ta.value = q.getSemanticHTML();
+    ta.classList.add('visible');
+    btn.classList.add('active');
+    btn.textContent = '↩ Voltar WYSIWYG';
+    ta.style.minHeight = '120px';
+    // Se editar no textarea, sincroniza ao sair
+    ta.oninput = () => {}; // live não — só ao voltar
+  }
+}
+
+// ─── PEGA HTML DO QUILL ──────────────────────────────
+window.getQuillHtml = function(id) {
+  const ta = document.getElementById('html-' + id);
+  // Se estiver no modo código, usa o textarea
+  if (ta && ta.classList.contains('visible')) return ta.value;
+  return quills[id] ? quills[id].getSemanticHTML() : '';
+}
+
+// ─── INICIALIZA QUILLS ESTÁTICOS ─────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  const h = pagesData.home || {};
+  createQuill('headline',    TOOLBAR_SIMPLE, h.hero?.headline    || 'Sua <strong>identidade</strong><br>começa aqui.');
+  createQuill('subheadline', TOOLBAR_SIMPLE, h.hero?.subheadline || 'Crachás, cordões e pulseiras. <strong>Mais de 25 anos</strong> em Londrina/PR.');
+  createQuill('endereco',    TOOLBAR_SIMPLE, pagesData.contato?.endereco || 'Rua Eduardo Benjamin Hosken, 200<br>CEP: 86020-440 — Londrina/PR');
+  createQuill('qs-headline', TOOLBAR_SIMPLE, pagesData.quemsomos?.hero_headline || '25 anos identificando <strong>pessoas e marcas</strong>.');
+  createQuill('qs-about',    TOOLBAR_FULL,   pagesData.quemsomos?.about_text || '<p>A <strong>Nonaca</strong> nasceu em 1999.</p>');
+});
+
+// ─── PAINEL NAVIGATION ───────────────────────────────
+window.showPanel = function(id, el) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('panel-' + id).classList.add('active');
+  const target = document.getElementById('panel-' + id);
+  if (target) target.classList.add('active');
   if (el) el.classList.add('active');
   const titles = {
-    dashboard: 'Dashboard', pages: 'Páginas', hero: 'Hero / Banner',
-    products: 'Produtos', media: 'Mídias', seo: 'SEO',
-    contato: 'Contato', quemsomos: 'Quem Somos'
+    dashboard:'Dashboard', pages:'Páginas', hero:'Hero / Banner',
+    products:'Produtos', media:'Mídias', seo:'SEO',
+    contato:'Contato', quemsomos:'Quem Somos',
   };
   document.getElementById('topbar-title').textContent = titles[id] || id;
-  if (id === 'products') renderProductsGrid();
-  if (id === 'media') renderMediaGrid();
+  if (id === 'products') window.renderProductsGrid();
+  if (id === 'media')    window.renderMediaGrid();
 }
 
-// Rich text editor
-const rteModes = {};
-function rteCmd(cmd, id) {
-  const el = document.getElementById('rte-' + id);
-  if (rteModes[id] === 'code') return;
-  el.focus();
-  document.execCommand(cmd, false, null);
-}
-function rteInsert(id, html) {
-  const el = document.getElementById('rte-' + id);
-  if (rteModes[id] === 'code') { el.value = (el.value || el.textContent) + html; return; }
-  el.focus();
-  const sel = window.getSelection();
-  if (sel.rangeCount) {
-    const range = sel.getRangeAt(0);
-    const node = document.createRange();
-    const frag = document.createRange();
-    const temp = document.createElement('div');
-    temp.innerHTML = html;
-    const fragment = document.createDocumentFragment();
-    let child;
-    while ((child = temp.firstChild)) fragment.appendChild(child);
-    range.insertNode(fragment);
-  }
-}
-function rteInsertTag(id, tag) {
-  const el = document.getElementById('rte-' + id);
-  if (rteModes[id] === 'code') {
-    const cur = el.textContent || el.innerHTML;
-    el.textContent = cur + `<${tag}></${tag}>`;
-    return;
-  }
-  document.execCommand('formatBlock', false, tag);
-}
-function rteToggleMode(id) {
-  const el = document.getElementById('rte-' + id);
-  if (rteModes[id] === 'code') {
-    // Switch back to visual
-    el.innerHTML = el.textContent;
-    el.contentEditable = 'true';
-    rteModes[id] = 'visual';
-    el.dataset.mode = 'visual';
-  } else {
-    // Switch to code
-    const html = el.innerHTML;
-    el.textContent = html;
-    el.contentEditable = 'true';
-    rteModes[id] = 'code';
-    el.dataset.mode = 'code';
-  }
-}
-function getRteContent(id) {
-  const el = document.getElementById('rte-' + id);
-  if (!el) return '';
-  return rteModes[id] === 'code' ? el.textContent : el.innerHTML;
-}
-
-// Image drag & drop
-function dragOver(e, id) { e.preventDefault(); document.getElementById(id).classList.add('dragover'); }
-function dragLeave(id) { document.getElementById(id).classList.remove('dragover'); }
-function dropFile(e, dropId, previewId) {
+// ─── IMAGE DRAG & DROP ───────────────────────────────
+window.dragOver  = (e,id) => { e.preventDefault(); document.getElementById(id)?.classList.add('dragover'); }
+window.dragLeave = (id)   => document.getElementById(id)?.classList.remove('dragover');
+window.dropFile  = (e, dropId, previewId) => {
   e.preventDefault();
-  document.getElementById(dropId).classList.remove('dragover');
-  const files = e.dataTransfer.files;
-  if (files.length) addImagePreviews(files, previewId);
+  document.getElementById(dropId)?.classList.remove('dragover');
+  if (e.dataTransfer.files.length) addImagePreviews(e.dataTransfer.files, previewId);
 }
-function previewFile(input, previewId, urlInputId) {
-  if (input.files.length) {
-    const url = URL.createObjectURL(input.files[0]);
-    const grid = document.getElementById(previewId);
-    grid.innerHTML = `<div class="img-preview-item"><img src="${url}" alt=""/></div>`;
-    if (urlInputId) document.getElementById(urlInputId).value = url;
-  }
+window.previewFile = (input, previewId, urlInputId) => {
+  if (!input.files.length) return;
+  const url = URL.createObjectURL(input.files[0]);
+  document.getElementById(previewId).innerHTML = `<div class="img-preview-item"><img src="${url}" alt=""/></div>`;
+  if (urlInputId) document.getElementById(urlInputId).value = url;
 }
-function previewMultiple(input, gridId) {
-  addImagePreviews(input.files, gridId);
-}
+window.previewMultiple = (input, gridId) => addImagePreviews(input.files, gridId);
+
 function addImagePreviews(files, gridId) {
   const grid = document.getElementById(gridId);
   Array.from(files).forEach(file => {
@@ -650,51 +742,166 @@ function addImagePreviews(files, gridId) {
   });
 }
 
-// Media grid
-function renderMediaGrid() {
+// ─── MEDIA GRID ──────────────────────────────────────
+window.renderMediaGrid = function() {
   const images = [
-    { src: 'https://nonaca.com.br/wp-content/uploads/2023/12/cracha-mini.jpg', name: 'cracha-mini.jpg' },
-    { src: 'https://nonaca.com.br/wp-content/uploads/2021/12/base-cordoesl-1.jpg', name: 'base-cordoes.jpg' },
-    { src: 'https://nonaca.com.br/wp-content/uploads/2024/04/pulseiras-3_600x450.jpg', name: 'pulseiras.jpg' },
-    { src: 'https://nonaca.com.br/wp-content/uploads/2021/12/base-cart-estudantess-1.jpg', name: 'carteirinhas.jpg' },
-    { src: 'https://nonaca.com.br/wp-content/uploads/2021/12/base-comandas-1.jpg', name: 'base-comandas.jpg' },
-    { src: 'https://nonaca.com.br/wp-content/uploads/2021/12/base-catracas-1.jpg', name: 'base-catracas.jpg' },
-    { src: 'https://nonaca.com.br/wp-content/uploads/2021/12/base-relogio-ponto-1.jpg', name: 'relogio-ponto.jpg' },
-    { src: 'https://nonaca.com.br/wp-content/uploads/2021/11/logo2-forte.png', name: 'logo.png' },
+    { src:'https://nonaca.com.br/wp-content/uploads/2023/12/cracha-mini.jpg', name:'cracha-mini.jpg' },
+    { src:'https://nonaca.com.br/wp-content/uploads/2021/12/base-cordoesl-1.jpg', name:'base-cordoes.jpg' },
+    { src:'https://nonaca.com.br/wp-content/uploads/2024/04/pulseiras-3_600x450.jpg', name:'pulseiras.jpg' },
+    { src:'https://nonaca.com.br/wp-content/uploads/2021/12/base-cart-estudantess-1.jpg', name:'carteirinhas.jpg' },
+    { src:'https://nonaca.com.br/wp-content/uploads/2021/12/base-comandas-1.jpg', name:'comandas.jpg' },
+    { src:'https://nonaca.com.br/wp-content/uploads/2021/12/base-catracas-1.jpg', name:'catracas.jpg' },
+    { src:'https://nonaca.com.br/wp-content/uploads/2021/12/base-relogio-ponto-1.jpg', name:'relogio.jpg' },
+    { src:'https://nonaca.com.br/wp-content/uploads/2021/11/logo2-forte.png', name:'logo.png' },
   ];
   const grid = document.getElementById('media-grid-previews');
   if (grid.childElementCount > 0) return;
   images.forEach(img => {
-    const item = document.createElement('div');
-    item.className = 'media-item';
+    const item = document.createElement('div'); item.className = 'media-item';
     item.innerHTML = `<img src="${img.src}" alt="${img.name}" loading="lazy" onerror="this.parentElement.style.background='#f3f4f6'"/><div class="media-name">${img.name}</div>`;
     item.onclick = () => item.classList.toggle('selected');
     grid.appendChild(item);
   });
 }
 
-// Products grid
-function renderProductsGrid() {
+// ─── PRODUCTS GRID ───────────────────────────────────
+window.renderProductsGrid = function() {
   const grid = document.getElementById('products-grid');
-  if (grid.childElementCount > 0) return;
+  grid.innerHTML = ''; // sempre re-renderiza para refletir mudanças
   productsData.forEach(p => {
-    const card = document.createElement('div');
-    card.className = 'product-card-admin';
+    const card = document.createElement('div'); card.className = 'product-card-admin';
     card.innerHTML = `
-      <img class="product-card-img" src="${p.image}" alt="${p.name}" loading="lazy"/>
+      <img class="product-card-img" src="${p.image}" alt="${p.name}" loading="lazy" onerror="this.src='https://nonaca.com.br/wp-content/uploads/2021/11/logo2-forte.png'"/>
       <div class="product-card-body">
         <div class="product-card-name">${p.name}</div>
         <div class="product-card-slug">/${p.slug}</div>
         <div class="product-card-actions">
           <button class="btn-edit" onclick="editProduct('${p.slug}')">Editar</button>
-          <a href="/${p.slug}" target="_blank" class="btn-seo" style="font-size:11px;padding:5px 13px;text-decoration:none">Ver →</a>
+          <a href="/${p.slug}" target="_blank" class="btn-seo" style="font-size:11px;padding:5px 10px;text-decoration:none">Ver →</a>
+          <button onclick="deleteProduct('${p.slug}','${p.name}')"
+            style="font-size:11px;padding:5px 10px;border-radius:7px;border:1px solid #fca5a5;background:#fef2f2;color:#dc2626;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s"
+            onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='#fef2f2'">
+            🗑
+          </button>
         </div>
       </div>`;
     grid.appendChild(card);
   });
 }
 
-function editProduct(slug) {
+// ─── MODAL NOVO PRODUTO ──────────────────────────────
+window.openNewProduct = function() {
+  const overlay = document.getElementById('modal-overlay');
+  overlay.style.display = 'flex';
+  // Limpa campos
+  ['new-slug','new-name','new-headline','new-description','new-image','new-features'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('new-img-preview').style.display = 'none';
+  document.getElementById('new-slug').focus();
+}
+
+window.closeModal = function() {
+  document.getElementById('modal-overlay').style.display = 'none';
+}
+
+window.updateNewImgPreview = function(url) {
+  const img = document.getElementById('new-img-preview');
+  if (url && url.startsWith('http')) {
+    img.src = url; img.style.display = 'block';
+  } else {
+    img.style.display = 'none';
+  }
+}
+
+window.createProduct = async function() {
+  const slug        = document.getElementById('new-slug').value.trim();
+  const name        = document.getElementById('new-name').value.trim();
+  const headline    = document.getElementById('new-headline').value.trim();
+  const description = document.getElementById('new-description').value.trim();
+  const image       = document.getElementById('new-image').value.trim();
+  const featuresRaw = document.getElementById('new-features').value.trim();
+
+  // Validações
+  if (!slug)  { alert('Preencha o slug (URL) do produto.'); return; }
+  if (!name)  { alert('Preencha o nome do produto.'); return; }
+  if (productsData.find(p => p.slug === slug)) {
+    alert(`Já existe um produto com o slug "${slug}". Escolha outro.`); return;
+  }
+
+  const features = featuresRaw ? featuresRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
+
+  const newProduct = {
+    slug, name,
+    headline:    headline    || `${name} personalizados.`,
+    description: description || `<p>${name} com qualidade Nonaca.</p>`,
+    image:       image       || 'https://nonaca.com.br/wp-content/uploads/2021/11/logo2-forte.png',
+    features,
+    navLabel: name,
+  };
+
+  const updated = [...productsData, newProduct];
+
+  try {
+    const res = await fetch('/api/admin/content', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ file: 'products.json', data: updated }),
+    });
+    const r = await res.json();
+    if (r.ok) {
+      productsData.push(newProduct);
+      window.showToast('toast-new');
+      setTimeout(() => {
+        window.closeModal();
+        window.renderProductsGrid();
+        // Abre o editor do produto recém-criado
+        window.editProduct(slug);
+      }, 1200);
+    } else {
+      alert('Erro ao criar produto: ' + (r.error || 'Tente novamente.'));
+    }
+  } catch(e) { alert('Erro de conexão: ' + e.message); }
+}
+
+window.deleteProduct = async function(slug, name) {
+  const confirma = confirm(`Tem certeza que deseja excluir o produto "${name}"?\n\nEsta ação não pode ser desfeita.`);
+  if (!confirma) return;
+
+  const updated = productsData.filter(p => p.slug !== slug);
+
+  try {
+    const res = await fetch('/api/admin/content', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ file: 'products.json', data: updated }),
+    });
+    const r = await res.json();
+    if (r.ok) {
+      // Remove do array local
+      const idx = productsData.findIndex(p => p.slug === slug);
+      if (idx > -1) productsData.splice(idx, 1);
+      // Fecha editor se estava aberto para este produto
+      const editor = document.getElementById('product-editor');
+      if (editor) editor.style.display = 'none';
+      // Re-renderiza grid
+      window.renderProductsGrid();
+    } else {
+      alert('Erro ao excluir: ' + (r.error || ''));
+    }
+  } catch(e) { alert('Erro: ' + e.message); }
+}
+
+// Fecha modal ao clicar fora
+document.getElementById('modal-overlay')?.addEventListener('click', function(e) {
+  if (e.target === this) window.closeModal();
+});
+// Fecha com ESC
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') window.closeModal();
+});
+window.editProduct = function(slug) {
   const p = productsData.find(x => x.slug === slug);
   if (!p) return;
   const editor = document.getElementById('product-editor');
@@ -706,34 +913,31 @@ function editProduct(slug) {
         <div class="field-label">Nome do produto</div>
         <input class="field-input" id="prod-name" value="${p.name}"/>
       </div>
+
       <div class="field-card">
-        <div class="field-label">Headline <span class="badge-html">HTML</span></div>
-        <div class="rte-toolbar">
-          <button class="rte-btn" onclick="rteCmd('bold','prod-headline')"><b>B</b></button>
-          <button class="rte-btn" onclick="rteCmd('italic','prod-headline')"><i>I</i></button>
-          <div class="rte-sep"></div>
-          <button class="rte-btn" onclick="rteToggleMode('prod-headline')" style="font-family:monospace">&lt;/&gt;</button>
+        <div class="field-label">Headline <span class="badge-html">WYSIWYG</span></div>
+        <div class="ql-wrapper" id="ql-wrap-prod-headline"><div id="ql-prod-headline"></div></div>
+        <div class="html-toggle">
+          <button onclick="toggleHtmlMode('prod-headline')" id="btn-html-prod-headline">&lt;/&gt; Ver HTML</button>
         </div>
-        <div class="rte-area" id="rte-prod-headline" contenteditable="true">${p.headline}</div>
+        <textarea class="html-source" id="html-prod-headline"></textarea>
       </div>
+
       <div class="field-card">
-        <div class="field-label">Descrição completa <span class="badge-html">HTML completo aceito</span></div>
-        <div class="rte-toolbar">
-          <button class="rte-btn" onclick="rteCmd('bold','prod-desc')"><b>B</b></button>
-          <button class="rte-btn" onclick="rteCmd('italic','prod-desc')"><i>I</i></button>
-          <button class="rte-btn" onclick="rteInsertTag('prod-desc','h3')">H3</button>
-          <button class="rte-btn" onclick="document.execCommand('insertUnorderedList')" title="Lista UL">UL</button>
-          <button class="rte-btn" onclick="document.execCommand('insertOrderedList')" title="Lista OL">OL</button>
-          <div class="rte-sep"></div>
-          <button class="rte-btn" onclick="rteToggleMode('prod-desc')" style="font-family:monospace">&lt;/&gt;</button>
+        <div class="field-label">Descrição completa <span class="badge-html">WYSIWYG</span></div>
+        <div class="ql-wrapper ql-tall" id="ql-wrap-prod-desc"><div id="ql-prod-desc"></div></div>
+        <div class="html-toggle">
+          <button onclick="toggleHtmlMode('prod-desc')" id="btn-html-prod-desc">&lt;/&gt; Ver HTML</button>
         </div>
-        <div class="rte-area" id="rte-prod-desc" contenteditable="true" style="min-height:150px">${p.description}</div>
+        <textarea class="html-source" id="html-prod-desc"></textarea>
       </div>
+
       <div class="field-card">
         <div class="field-label">URL da foto principal <span class="badge-img">IMAGEM</span></div>
-        <input class="field-input" id="prod-img-url" value="${p.image}"/>
+        <input class="field-input" id="prod-img-url" value="${p.image}" oninput="document.getElementById('prod-img-preview').src=this.value"/>
         <img id="prod-img-preview" src="${p.image}" alt="" style="margin-top:8px;height:80px;border-radius:8px;border:1px solid #e5e7eb;object-fit:cover"/>
       </div>
+
       <div class="save-row">
         <a href="/${p.slug}" target="_blank" class="btn-preview">Ver produto →</a>
         <div style="display:flex;align-items:center;gap:10px">
@@ -742,100 +946,134 @@ function editProduct(slug) {
         </div>
       </div>
     </div>`;
+
   editor.scrollIntoView({ behavior: 'smooth' });
-  // Update img preview on url change
-  document.getElementById('prod-img-url').addEventListener('input', function() {
-    document.getElementById('prod-img-preview').src = this.value;
-  });
+
+  // Inicia Quills dinâmicos — aguarda DOM
+  setTimeout(() => {
+    // Limpa instâncias anteriores
+    delete quills['prod-headline'];
+    delete quills['prod-desc'];
+    createQuill('prod-headline', TOOLBAR_SIMPLE, p.headline    || '');
+    createQuill('prod-desc',     TOOLBAR_FULL,   p.description || '');
+  }, 60);
 }
 
-// Save functions
-function saveHero() {
-  const data = {
-    headline: getRteContent('headline'),
-    subheadline: getRteContent('subheadline'),
-    cta_primary_text: document.getElementById('cta-primary-text').value,
-    cta_primary_url: document.getElementById('cta-primary-url').value,
-    hero_image: document.getElementById('hero-img-url').value,
-  };
-  saveTo('pages.json', 'hero', data, 'toast-hero');
-}
+// ─── SAVE PRODUCT ────────────────────────────────────
+window.saveProduct = async function(slug) {
+  const name     = document.getElementById('prod-name')?.value ?? '';
+  const headline = window.getQuillHtml('prod-headline');
+  const desc     = window.getQuillHtml('prod-desc');
+  const image    = document.getElementById('prod-img-url')?.value ?? '';
 
-function saveContato() {
-  const data = {
-    endereco: getRteContent('endereco'),
-    telefone1: document.getElementById('tel1').value,
-    telefone2: document.getElementById('tel2').value,
-    whatsapp: document.getElementById('whatsapp').value,
-    email: document.getElementById('email').value,
-  };
-  saveTo('pages.json', 'contato', data, 'toast-contato');
-}
-
-function saveProduct(slug) {
-  showToast('toast-prod');
-}
-
-async function saveTo(file, section, data, toastId) {
+  const updated = productsData.map(p =>
+    p.slug !== slug ? p : { ...p, name, headline, description: desc, image }
+  );
   try {
     const res = await fetch('/api/admin/content', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ file, section, data }),
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ file:'products.json', data: updated }),
     });
-    const json = await res.json();
-    if (json.ok) showToast(toastId);
-  } catch {
-    showToast(toastId);
-  }
+    const r = await res.json();
+    if (r.ok) {
+      const idx = productsData.findIndex(p => p.slug === slug);
+      if (idx > -1) Object.assign(productsData[idx], { name, headline, description: desc, image });
+      window.showToast('toast-prod');
+    } else { alert('Erro ao salvar: ' + (r.error || '')); }
+  } catch(e) { alert('Erro: ' + e.message); }
 }
 
-function showToast(id) {
+// ─── SAVE HERO ───────────────────────────────────────
+window.saveHero = async function() {
+  const data = {
+    headline:         window.getQuillHtml('headline'),
+    subheadline:      window.getQuillHtml('subheadline'),
+    cta_primary_text: document.getElementById('cta-primary-text').value,
+    cta_primary_url:  document.getElementById('cta-primary-url').value,
+    hero_image:       document.getElementById('hero-img-url').value,
+  };
+  try {
+    const res = await fetch('/api/admin/content?file=pages.json');
+    const cur = await res.json();
+    cur.home = cur.home ?? {}; cur.home.hero = { ...(cur.home.hero || {}), ...data };
+    const save = await fetch('/api/admin/content', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ file:'pages.json', data: cur }),
+    });
+    const r = await save.json();
+    if (r.ok) window.showToast('toast-hero');
+    else alert('Erro: ' + (r.error || ''));
+  } catch(e) { alert('Erro: ' + e.message); }
+}
+
+// ─── SAVE CONTATO ────────────────────────────────────
+window.saveContato = async function() {
+  const data = {
+    endereco:  window.getQuillHtml('endereco'),
+    telefone1: document.getElementById('tel1').value,
+    telefone2: document.getElementById('tel2').value,
+    whatsapp:  document.getElementById('whatsapp').value,
+    email:     document.getElementById('email').value,
+  };
+  try {
+    const res = await fetch('/api/admin/content?file=pages.json');
+    const cur = await res.json();
+    cur.contato = { ...(cur.contato || {}), ...data };
+    const save = await fetch('/api/admin/content', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ file:'pages.json', data: cur }),
+    });
+    const r = await save.json();
+    if (r.ok) window.showToast('toast-contato');
+    else alert('Erro: ' + (r.error || ''));
+  } catch(e) { alert('Erro: ' + e.message); }
+}
+
+// ─── SAVE QUEM SOMOS ─────────────────────────────────
+window.saveQuemSomos = async function() {
+  const data = {
+    hero_headline: window.getQuillHtml('qs-headline'),
+    about_text:    window.getQuillHtml('qs-about'),
+  };
+  try {
+    const res = await fetch('/api/admin/content?file=pages.json');
+    const cur = await res.json();
+    cur.quemsomos = { ...(cur.quemsomos || {}), ...data };
+    const save = await fetch('/api/admin/content', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ file:'pages.json', data: cur }),
+    });
+    const r = await save.json();
+    if (r.ok) window.showToast('toast-qs');
+    else alert('Erro: ' + (r.error || ''));
+  } catch(e) { alert('Erro: ' + e.message); }
+}
+
+// ─── SHOW TOAST ──────────────────────────────────────
+window.showToast = function(id) {
   const t = document.getElementById(id);
   if (!t) return;
-  t.classList.remove('show');
-  void t.offsetWidth;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2600);
+  t.classList.remove('show'); void t.offsetWidth; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
 }
 
-// SEO preview
-function updateSeoPreview() {
-  const title = document.getElementById('seo-title').value;
-  const desc = document.getElementById('seo-desc').value;
-  const page = document.getElementById('seo-page').value;
-  document.getElementById('seo-prev-title').textContent = title.slice(0, 60);
-  document.getElementById('seo-prev-desc').textContent = desc.slice(0, 160);
-  document.getElementById('seo-prev-url').textContent = `nonaca.com.br › ${page}`;
-  document.getElementById('seo-title-count').textContent = `${title.length} / 60 caracteres`;
-  document.getElementById('seo-desc-count').textContent = `${desc.length} / 160 caracteres`;
-}
-updateSeoPreview();
-
-// Logout
-async function doLogout() {
-  await fetch('/api/admin/logout', { method: 'POST' });
+// ─── LOGOUT ──────────────────────────────────────────
+window.doLogout = async function() {
+  await fetch('/api/admin/logout', { method:'POST' });
   window.location.href = '/admin/login';
 }
 
-// Page selector
-function selectPage(key, name) {
+// ─── PAGE SELECTOR ───────────────────────────────────
+window.selectPage = function(key, name) {
   document.querySelectorAll('#page-selector button').forEach(b => {
-    b.style.background = '';
-    b.style.color = '';
-    b.style.borderColor = '';
+    b.style.background = ''; b.style.color = '';
   });
   event.target.style.background = '#1a4b8e';
   event.target.style.color = '#fff';
   const area = document.getElementById('page-editor-area');
-  if (key === 'home') {
-    area.innerHTML = '<p style="font-size:13px;color:#6b7280;padding:1rem 0">Para editar a Home, use as seções <strong>Hero / Banner</strong> no menu lateral. As demais seções são gerenciadas automaticamente via produtos.</p>';
-  } else if (key === 'quemsomos') {
-    area.innerHTML = '<p style="font-size:13px;color:#6b7280;padding:1rem 0">Para editar "Quem Somos", acesse o item <strong>Quem Somos</strong> no menu lateral.</p>';
-  } else {
-    const slug = key.replace('product-', '');
-    area.innerHTML = `<p style="font-size:13px;color:#6b7280;padding:1rem 0">Para editar o produto <strong>${name}</strong>, acesse <strong>Produtos</strong> no menu lateral e clique em "Editar".</p>`;
-  }
+  if (key === 'home') area.innerHTML = '<p style="font-size:13px;color:#6b7280;padding:1rem 0">Use <strong>Hero / Banner</strong> no menu para editar a home.</p>';
+  else if (key === 'quemsomos') area.innerHTML = '<p style="font-size:13px;color:#6b7280;padding:1rem 0">Use <strong>Quem Somos</strong> no menu.</p>';
+  else area.innerHTML = `<p style="font-size:13px;color:#6b7280;padding:1rem 0">Use <strong>Produtos</strong> no menu e clique em "Editar" em <strong>${name}</strong>.</p>`;
 }
 </script>
 
