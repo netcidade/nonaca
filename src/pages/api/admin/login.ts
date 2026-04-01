@@ -2,10 +2,6 @@ import type { APIRoute } from 'astro';
 
 export const prerender = false;
 
-// Senha padrão — altere via variável de ambiente ADMIN_PASSWORD no .env
-const SENHA = import.meta.env.ADMIN_PASSWORD ?? 'nonaca2025';
-const TOKEN = import.meta.env.ADMIN_TOKEN   ?? 'nonaca2025';
-
 function json(data: any, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
@@ -13,17 +9,21 @@ function json(data: any, status = 200) {
   });
 }
 
-export const POST: APIRoute = async ({ request, cookies }) => {
+export const POST: APIRoute = async ({ request, cookies, locals }) => {
   try {
+    // ✅ Lê do ambiente do Cloudflare Worker
+    const runtime = (locals as any).runtime;
+    const ADMIN_TOKEN = runtime?.env?.ADMIN_TOKEN ?? 'Nonaca@2025';
+
     const body = await request.json();
     const { password } = body;
 
-    if (password === SENHA) {
-      cookies.set('nonaca_admin_session', TOKEN, {
+    if (password === ADMIN_TOKEN) {
+      cookies.set('nonaca_admin_session', ADMIN_TOKEN, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: true,
         path: '/',
-        maxAge: 60 * 60 * 24 * 7, // 7 dias
+        maxAge: 60 * 60 * 24 * 7,
         sameSite: 'lax',
       });
       return json({ ok: true });
@@ -36,4 +36,3 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return json({ ok: false, error: 'Erro no servidor' }, 500);
   }
 };
-
