@@ -1,68 +1,71 @@
 import type { APIRoute } from 'astro';
-import { getStorage, BUCKET_MEDIA, ID } from '../../../lib/appwrite';
+import { getStorage, getEnvIds, ID } from '../../../lib/appwrite';
 
 export const prerender = false;
 
-const ADMIN_TOKEN = import.meta.env.ADMIN_TOKEN ?? 'nonaca2025';
 function json(data: any, status = 200) {
   return new Response(JSON.stringify(data), {
     status, headers: { 'Content-Type': 'application/json' },
   });
 }
-function isAuthorized(cookies: any) {
+
+function isAuthorized(cookies: any, env: any) {
+  const ADMIN_TOKEN = env.ADMIN_TOKEN ?? 'nonaca2025';
   return cookies.get('nonaca_admin_session')?.value === ADMIN_TOKEN;
 }
 
-const APPWRITE_ENDPOINT = import.meta.env.APPWRITE_ENDPOINT ?? '';
-const APPWRITE_PROJECT  = import.meta.env.APPWRITE_PROJECT_ID ?? '';
-
-function getPublicUrl(fileId: string) {
-  return `${APPWRITE_ENDPOINT}/storage/buckets/${BUCKET_MEDIA}/files/${fileId}/view?project=${APPWRITE_PROJECT}`;
+function getPublicUrl(fileId: string, env: any) {
+  const endpoint = env.APPWRITE_ENDPOINT ?? '';
+  const project = env.APPWRITE_PROJECT_ID ?? '';
+  const bucket = env.APPWRITE_BUCKET_MEDIA ?? 'media';
+  return `${endpoint}/storage/buckets/${bucket}/files/${fileId}/view?project=${project}`;
 }
 
-// ── GET ── lista arquivos do bucket
-export const GET: APIRoute = async ({ cookies }) => {
-  if (!isAuthorized(cookies)) return json({ ok: false, error: 'Não autorizado' }, 401);
+export const GET: APIRoute = async ({ cookies, locals }) => {
+  const env = (locals as any).runtime?.env ?? {};
+  if (!isAuthorized(cookies, env)) return json({ ok: false, error: 'Não autorizado' }, 401);
   try {
-    const s = getStorage();
+    const { BUCKET_MEDIA } = getEnvIds(env);
+    const s = getStorage(env);
     const res = await s.listFiles(BUCKET_MEDIA);
     const media = res.files.map((f: any) => ({
       name: f.name,
-      id:   f.$id,
-      url:  getPublicUrl(f.$id),
+      id: f.$id,
+      url: getPublicUrl(f.$id, env),
     }));
     return json({ ok: true, media });
-  } catch(e: any) {
+  } catch (e: any) {
     return json({ ok: false, error: e.message }, 500);
   }
 };
 
-// ── POST ── faz upload de imagem
-export const POST: APIRoute = async ({ request, cookies }) => {
-  if (!isAuthorized(cookies)) return json({ ok: false, error: 'Não autorizado' }, 401);
+export const POST: APIRoute = async ({ request, cookies, locals }) => {
+  const env = (locals as any).runtime?.env ?? {};
+  if (!isAuthorized(cookies, env)) return json({ ok: false, error: 'Não autorizado' }, 401);
   try {
     const formData = await request.formData();
     const file = formData.get('file') as File;
     if (!file) return json({ ok: false, error: 'Nenhum arquivo enviado' }, 400);
-
-    const s = getStorage();
+    const { BUCKET_MEDIA } = getEnvIds(env);
+    const s = getStorage(env);
     const result = await s.createFile(BUCKET_MEDIA, ID.unique(), file);
-    return json({ ok: true, file: { id: result.$id, name: result.name, url: getPublicUrl(result.$id) } });
-  } catch(e: any) {
+    return json({ ok: true, file: { id: result.$id, name: result.name, url: getPublicUrl(result.$id, env) } });
+  } catch (e: any) {
     return json({ ok: false, error: e.message }, 500);
   }
 };
 
-// ── DELETE ── remove arquivo do bucket
-export const DELETE: APIRoute = async ({ request, cookies }) => {
-  if (!isAuthorized(cookies)) return json({ ok: false, error: 'Não autorizado' }, 401);
+export const DELETE: APIRoute = async ({ request, cookies, locals }) => {
+  const env = (locals as any).runtime?.env ?? {};
+  if (!isAuthorized(cookies, env)) return json({ ok: false, error: 'Não autorizado' }, 401);
   try {
     const { id } = await request.json();
     if (!id) return json({ ok: false, error: 'ID inválido' }, 400);
-    const s = getStorage();
+    const { BUCKET_MEDIA } = getEnvIds(env);
+    const s = getStorage(env);
     await s.deleteFile(BUCKET_MEDIA, id);
     return json({ ok: true });
-  } catch(e: any) {
+  } catch (e: any) {
     return json({ ok: false, error: e.message }, 500);
   }
 };
