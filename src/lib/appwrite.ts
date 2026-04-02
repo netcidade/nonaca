@@ -12,7 +12,7 @@ export function getClient(env: any) {
   const endpoint = env.APPWRITE_ENDPOINT ?? '';
   const project = env.APPWRITE_PROJECT_ID ?? '';
   const apiKey = env.APPWRITE_API_KEY ?? '';
-  return new Client().setEndpoint(endpoint).setProject(project).setKey(apiKey);
+  return new Client().setEndpoint(endpoint).setProject(project).setKey(apiKey).setSelfSigned(true);
 }
 
 export function getDatabases(env: any) {
