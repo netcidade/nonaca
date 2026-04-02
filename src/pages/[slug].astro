@@ -1,15 +1,26 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import products from '../content/products.json';
+import { getDatabases, getEnvIds } from '../lib/appwrite';
+import { Query } from 'node-appwrite';
 
-export function getStaticPaths() {
-  return products.map(product => ({
-    params: { slug: product.slug },
-    props: { product },
-  }));
+export const prerender = false;
+
+const env = import.meta.env;
+const db = getDatabases(env);
+const { DB_ID, COL_PRODUCTS } = getEnvIds(env);
+
+const { slug } = Astro.params;
+
+// Fetch product
+const productsRes = await db.listDocuments(DB_ID, COL_PRODUCTS, [Query.limit(100)]);
+const products = productsRes.documents.map((d: any) => JSON.parse(d.data));
+
+const product = products.find(p => p.slug === slug);
+
+if (!product) {
+  return new Response('Página não encontrada', { status: 404 });
 }
 
-const { product } = Astro.props;
 const others = products.filter(p => p.slug !== product.slug).slice(0, 4);
 ---
 

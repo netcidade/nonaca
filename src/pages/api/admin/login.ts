@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { getAdminToken } from '../../../lib/appwrite';
 
 export const prerender = false;
 
@@ -11,9 +12,8 @@ function json(data: any, status = 200) {
 
 export const POST: APIRoute = async ({ request, cookies, locals }) => {
   try {
-    // ✅ Lê do ambiente do Cloudflare Worker
-    const runtime = (locals as any).runtime;
-    const ADMIN_TOKEN = runtime?.env?.ADMIN_TOKEN ?? 'nonaca2025';
+    const env = (locals as any).runtime?.env ?? {};
+    const ADMIN_TOKEN = getAdminToken(env);
 
     const body = await request.json();
     const { password } = body;

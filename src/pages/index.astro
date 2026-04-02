@@ -1,10 +1,23 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import products from '../content/products.json';
-import content from '../content/pages.json';
+import { getDatabases, getEnvIds } from '../lib/appwrite';
+import { Query } from 'node-appwrite';
 
-const { home } = content;
-const { hero, diferenciais } = home;
+const env = import.meta.env;
+const db = getDatabases(env);
+const { DB_ID, COL_CONTENT, COL_PRODUCTS } = getEnvIds(env);
+
+// Fetch pages config
+const pagesRes = await db.listDocuments(DB_ID, COL_CONTENT, [Query.equal('key', 'pages')]);
+const content = pagesRes.documents[0] ? JSON.parse(pagesRes.documents[0].data) : {};
+
+// Fetch products
+const productsRes = await db.listDocuments(DB_ID, COL_PRODUCTS, [Query.limit(100)]);
+const products = productsRes.documents.map((d: any) => JSON.parse(d.data));
+
+const home = content.home || {};
+const hero = home.hero || {};
+const diferenciais = home.diferenciais || [];
 ---
 
 <BaseLayout title={home.seo?.title} description={home.seo?.description}>

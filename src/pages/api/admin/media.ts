@@ -9,8 +9,10 @@ function json(data: any, status = 200) {
   });
 }
 
+import { getAdminToken } from '../../../lib/appwrite';
+
 function isAuthorized(cookies: any, env: any) {
-  const ADMIN_TOKEN = env.ADMIN_TOKEN ?? 'nonaca2025';
+  const ADMIN_TOKEN = getAdminToken(env);
   return cookies.get('nonaca_admin_session')?.value === ADMIN_TOKEN;
 }
 

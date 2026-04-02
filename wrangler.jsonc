@@ -11,9 +11,9 @@
     },
     "vars": {
         "SITE_URL": "https://nonaca.com.br",
-        "APPWRITE_ENDPOINT": "https://appwrite-chjf8p91ixyxxjdpbv4cpp17.138.201.188.208.sslip.io",
-        "APPWRITE_PROJECT_ID": "69cd498c002c9098b10d",
-        "APPWRITE_DB_ID": "69cd4f8200023db2ed87",
+        "APPWRITE_ENDPOINT": "https://nyc.cloud.appwrite.io/v1",
+        "APPWRITE_PROJECT_ID": "69ce5dec001dbdbfcac3",
+        "APPWRITE_DB_ID": "69ce615f0021b49bf407",
         "APPWRITE_COLLECTION_CONTENT": "site_content",
         "APPWRITE_COLLECTION_PRODUCTS": "products",
         "APPWRITE_BUCKET_MEDIA": "media"

@@ -1842,60 +1842,7 @@ const products = productsRes.documents.map((d: any) => JSON.parse(d.data));
                 rows="3"
                 placeholder="Texto abaixo da logo no rodapé..."></textarea>
             </div>
-            <div
-              class="field-card"
-              style="display:grid;grid-template-columns:1fr 1fr;gap:1rem"
-            >
-              <div>
-                <div class="field-label">Telefone 1</div><input
-                  class="field-input"
-                  id="layout-footer-phone1"
-                  placeholder="(43) 3026-1326"
-                />
-              </div>
-              <div>
-                <div class="field-label">Telefone 2</div><input
-                  class="field-input"
-                  id="layout-footer-phone2"
-                  placeholder="(43) 3323-3692"
-                />
-              </div>
-            </div>
-            <div
-              class="field-card"
-              style="display:grid;grid-template-columns:1fr 1fr;gap:1rem"
-            >
-              <div>
-                <div class="field-label">WhatsApp</div><input
-                  class="field-input"
-                  id="layout-footer-whatsapp"
-                  placeholder="5543988179234"
-                />
-              </div>
-              <div>
-                <div class="field-label">E-mail</div><input
-                  class="field-input"
-                  id="layout-footer-email"
-                  placeholder="contato@nonaca.com.br"
-                />
-              </div>
-            </div>
-            <div class="field-card">
-              <div class="field-label">Endereço</div>
-              <input
-                class="field-input"
-                id="layout-footer-address"
-                placeholder="Rua Eduardo Benjamin Hosken, 200 — Londrina/PR"
-              />
-            </div>
-            <div class="field-card">
-              <div class="field-label">Link Google Maps</div>
-              <input
-                class="field-input"
-                id="layout-footer-maps"
-                placeholder="https://www.google.com/maps/..."
-              />
-            </div>
+
             <div class="field-card">
               <div class="field-label">Copyright</div>
               <input
@@ -2271,29 +2218,7 @@ const products = productsRes.documents.map((d: any) => JSON.parse(d.data));
             lay.footer_desc ||
             "Sistema de identificação com mais de 25 anos de experiência. Qualidade e inovação em Londrina/PR.",
         );
-        set(
-          "layout-footer-phone1",
-          ftr.phone1 || cnt.telefone1 || "(43) 3026-1326",
-        );
-        set(
-          "layout-footer-phone2",
-          ftr.phone2 || cnt.telefone2 || "(43) 3323-3692",
-        );
-        set(
-          "layout-footer-whatsapp",
-          ftr.whatsapp || cnt.whatsapp || "5543988179234",
-        );
-        set(
-          "layout-footer-email",
-          ftr.email || cnt.email || "contato@nonaca.com.br",
-        );
-        set(
-          "layout-footer-address",
-          ftr.address ||
-            cnt.endereco ||
-            "Rua Eduardo Benjamin Hosken, 200 — CEP 86020-440 — Londrina/PR",
-        );
-        set("layout-footer-maps", ftr.maps_url || cnt.maps_url || "");
+
         set(
           "layout-copyright",
           ftr.copyright ||
@@ -2357,12 +2282,7 @@ const products = productsRes.documents.map((d: any) => JSON.parse(d.data));
           footer: {
             logo_url: get("layout-footer-logo"),
             desc: get("layout-footer-desc"),
-            phone1: get("layout-footer-phone1"),
-            phone2: get("layout-footer-phone2"),
-            whatsapp: get("layout-footer-whatsapp"),
-            email: get("layout-footer-email"),
-            address: get("layout-footer-address"),
-            maps_url: get("layout-footer-maps"),
+
             copyright: get("layout-copyright"),
           },
         };
