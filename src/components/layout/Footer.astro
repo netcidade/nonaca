@@ -2,7 +2,7 @@
 import { getDatabases, getEnvIds } from '../../lib/appwrite';
 import { Query } from 'node-appwrite';
 
-const env = import.meta.env;
+const env = (Astro.locals as any).runtime?.env ?? import.meta.env;
 const db = getDatabases(env);
 const { DB_ID, COL_CONTENT, COL_PRODUCTS } = getEnvIds(env);
 

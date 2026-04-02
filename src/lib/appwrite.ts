@@ -14,9 +14,9 @@ export const BUCKET_MEDIA = 'media';
  */
 export function mergeEnv(runtimeEnv: any): any {
   const viteEnv: Record<string, string> = {
-    APPWRITE_ENDPOINT: import.meta.env.APPWRITE_ENDPOINT ?? '',
-    APPWRITE_PROJECT_ID: import.meta.env.APPWRITE_PROJECT_ID ?? '',
-    APPWRITE_API_KEY: import.meta.env.APPWRITE_API_KEY ?? '',
+    APPWRITE_ENDPOINT: import.meta.env.VITE_APPWRITE_ENDPOINT ?? import.meta.env.APPWRITE_ENDPOINT ?? '',
+    APPWRITE_PROJECT_ID: import.meta.env.VITE_APPWRITE_PROJECT_ID ?? import.meta.env.APPWRITE_PROJECT_ID ?? '',
+    APPWRITE_API_KEY: import.meta.env.VITE_APPWRITE_API_KEY ?? import.meta.env.APPWRITE_API_KEY ?? '',
     APPWRITE_DB_ID: import.meta.env.APPWRITE_DB_ID ?? '',
     APPWRITE_COLLECTION_CONTENT: import.meta.env.APPWRITE_COLLECTION_CONTENT ?? 'site_content',
     APPWRITE_COLLECTION_PRODUCTS: import.meta.env.APPWRITE_COLLECTION_PRODUCTS ?? 'products',
